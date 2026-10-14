@@ -1,3 +1,18 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="description" content="nyxika - character artist. Portfolio, original characters, backgrounds and commissions.">
+<meta property="og:title" content="nyxika">
+<meta property="og:description" content="Character artist. Adoptables, original characters and commissions.">
+<meta property="og:type" content="website">
+<style>
+:root{color-scheme:light; padding-top:env(safe-area-inset-top,0px); padding-bottom:env(safe-area-inset-bottom,0px)}
+body{margin:0}
+img{max-width:100%}
+[hidden]{display:none!important}
+</style>
 <title>nyxika</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -803,6 +818,8 @@ footer{
 }
 </style>
 
+</head>
+<body>
 <svg width="0" height="0" style="position:absolute" aria-hidden="true"><defs>
 <symbol id="i-spark" viewBox="0 0 24 24"><path d="M12 0c.6 6.3 5.1 11 11.3 12-6.2 1-10.7 5.7-11.3 12-.6-6.3-5.1-11-11.3-12C7 11 11.4 6.3 12 0z" fill="currentColor"/></symbol>
 <symbol id="i-star" viewBox="0 0 24 24"><path d="M12 1.6l3.1 6.6 7 1-5 5 1.2 7.2L12 18l-6.3 3.4L6.9 14.2l-5-5 7-1z" fill="currentColor"/></symbol>
@@ -2163,13 +2180,16 @@ function arm(){
 }
 
 /* ---------------- init ---------------- */
-var saved = null;
-try { saved = localStorage.getItem("nyxika-lang") } catch(e){}
-if (!saved){
-  var n = (navigator.language || "en").slice(0,2).toLowerCase();
-  if (n === "ru") n = "uk";
-  saved = T[n] ? n : "en";
+/* a fresh load always starts at the top - only #gallery survives a refresh */
+if ("scrollRestoration" in history){ try { history.scrollRestoration = "manual" } catch(e){} }
+if (location.hash && location.hash !== "#gallery"){
+  try { history.replaceState(null, "", location.pathname + location.search) } catch(e){}
 }
+
+/* English is the default on every visit; a language picked by hand lasts for that tab */
+var saved = null;
+try { saved = sessionStorage.getItem("nyxika-lang") } catch(e){}
+if (!T[saved]) saved = "en";
 function start(){ apply(T[saved] ? saved : "en"); route(); }
 
 /* Pull content from data/*.json when the site is served over http.
@@ -2188,7 +2208,7 @@ function start(){ apply(T[saved] ? saved : "en"); route(); }
 $("#langList").addEventListener("click", function(e){
   var b = e.target.closest("button[data-l]"); if (!b) return;
   apply(b.dataset.l);
-  try { localStorage.setItem("nyxika-lang", b.dataset.l) } catch(err){}
+  try { sessionStorage.setItem("nyxika-lang", b.dataset.l) } catch(err){}
 });
 
 /* router - #gallery swaps the whole page, back returns to the site */
@@ -2196,13 +2216,15 @@ var homePage = $('[data-page="home"]'), galPage = $("#galleryPage"), onGal = nul
 function route(){
   var g = location.hash === "#gallery";
   if (g === onGal) return;
+  var first = (onGal === null);          // first run: never move the page
   onGal = g;
   galPage.hidden = !g; homePage.hidden = g;
   $$("#nav a").forEach(function(a){
     if (a.getAttribute("href") === "#gallery") a.classList.toggle("on", g);
     else if (g) a.classList.remove("on");
   });
-  if (g) { window.scrollTo(0,0); }
+  if (first) { window.scrollTo(0,0); }
+  else if (g) { window.scrollTo(0,0); }
   else {
     // coming back from the gallery lands on the portfolio block they left from
     var id = location.hash.slice(1) || "works";
@@ -2331,3 +2353,6 @@ window.addEventListener("resize", function(){
 });
 })();
 </script>
+
+</body>
+</html>
