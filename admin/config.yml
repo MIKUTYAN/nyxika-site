@@ -1,0 +1,131 @@
+# ─────────────────────────────────────────────────────────────
+#  ЗАМІНИ цей рядок на свій репозиторій: власник/назва-репозиторію
+# ─────────────────────────────────────────────────────────────
+backend:
+  name: github
+  repo: MIKUTYAN/nyxika-site
+  branch: main
+
+# куди CMS кладе завантажені картинки
+media_folder: img
+public_folder: /img
+
+publish_mode: simple
+
+collections:
+  # ── РОБОТИ ────────────────────────────────────────────────
+  - name: works
+    label: Роботи
+    files:
+      - name: works
+        label: Усі роботи
+        file: data/works.json
+        description: >-
+          Персонажі, фони та half-body. Галочка «на головній» вирішує,
+          які три картки видно на першій сторінці.
+        fields:
+          - name: characters
+            label: Персонажі
+            label_singular: персонажа
+            widget: list
+            collapsed: false
+            summary: '{{fields.name}} — {{fields.tag}}'
+            fields:
+              - { name: id, label: ID, widget: string, hint: "Латиницею, без пробілів. Має бути унікальним." }
+              - { name: name, label: Ім'я, widget: string }
+              - { name: tag, label: Підпис (англійською), widget: string }
+              - { name: tag_uk, label: Підпис (українською), widget: string, required: false }
+              - { name: card, label: Картка (вертикальна, 3:4), widget: image }
+              - { name: full, label: Повний лист, widget: image }
+              - { name: featured, label: Показати на головній, widget: boolean, default: false }
+
+          - name: backgrounds
+            label: Фони
+            label_singular: фон
+            widget: list
+            collapsed: false
+            summary: '{{fields.name}} — {{fields.tag}}'
+            fields:
+              - { name: id, label: ID, widget: string }
+              - { name: name, label: Назва (англійською), widget: string }
+              - { name: name_uk, label: Назва (українською), widget: string, required: false }
+              - { name: tag, label: Підпис (англійською), widget: string }
+              - { name: tag_uk, label: Підпис (українською), widget: string, required: false }
+              - { name: card, label: Картка (горизонтальна, 16:10), widget: image }
+              - { name: full, label: Повне зображення, widget: image }
+
+          - name: halfbody
+            label: Half body
+            label_singular: роботу
+            widget: list
+            collapsed: false
+            summary: '{{fields.name}} — {{fields.tag}}'
+            fields:
+              - { name: id, label: ID, widget: string }
+              - { name: name, label: Назва (англійською), widget: string }
+              - { name: name_uk, label: Назва (українською), widget: string, required: false }
+              - { name: tag, label: Підпис (англійською), widget: string }
+              - { name: tag_uk, label: Підпис (українською), widget: string, required: false }
+              - { name: card, label: Картка (вертикальна, 3:4), widget: image }
+              - { name: full, label: Повне зображення, widget: image }
+
+  # ── ЦІНИ ──────────────────────────────────────────────────
+  - name: pricing
+    label: Ціни
+    files:
+      - name: pricing
+        label: Прайс
+        file: data/pricing.json
+        description: Тарифи, доповнення та відсоток за комерційні права.
+        fields:
+          - name: tiers
+            label: Тарифи
+            widget: list
+            collapsed: false
+            summary: '{{fields.key}} — ${{fields.bust}} / ${{fields.half}} / ${{fields.full}}'
+            fields:
+              - name: key
+                label: Тариф
+                widget: select
+                options:
+                  - { label: Скетч, value: sketch }
+                  - { label: Лайнарт, value: lineart }
+                  - { label: Плоский колір, value: flat }
+                  - { label: Повний рендер, value: render }
+                hint: "Назву й опис тарифу перекладено в самому сайті — тут лише ціни."
+              - { name: bust, label: Бюст ($), widget: number, value_type: int, min: 0 }
+              - { name: half, label: Півтіла ($), widget: number, value_type: int, min: 0 }
+              - { name: full, label: Повний зріст ($), widget: number, value_type: int, min: 0 }
+              - { name: featured, label: Виділити тариф, widget: boolean, default: false }
+
+          - name: addons
+            label: Доповнення
+            label_singular: доповнення
+            widget: list
+            collapsed: false
+            summary: '{{fields.label}} — {{fields.price}}'
+            fields:
+              - { name: label, label: Назва (англійською), widget: string }
+              - { name: label_uk, label: Назва (українською), widget: string, required: false }
+              - { name: price, label: Ціна, widget: string, hint: "Наприклад: +$30, +50%, from $30" }
+
+          - { name: commercial, label: Комерційні права, widget: string, hint: "Наприклад: +50%" }
+
+  # ── ВІДГУКИ ───────────────────────────────────────────────
+  - name: reviews
+    label: Відгуки
+    files:
+      - name: reviews
+        label: Відгуки покупців
+        file: data/reviews.json
+        description: Справжні слова покупців. Пошту й інші особисті дані сюди не додавай.
+        fields:
+          - name: items
+            label: Відгуки
+            label_singular: відгук
+            widget: list
+            collapsed: false
+            summary: '{{fields.name}} — {{fields.quote}}'
+            fields:
+              - { name: quote, label: Текст відгуку, widget: text }
+              - { name: name, label: Нік покупця, widget: string }

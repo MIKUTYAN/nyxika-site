@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex">
+<title>nyxika — адмінка</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&family=Karla:wght@400;600;700&family=Italianno&display=swap">
+<style>
+  :root{
+    --bg:#FDF6E9; --surface:#FFFCF5; --fg:#3A2E28; --fg-2:#76665B;
+    --line:#EDDFC6; --line-2:#DCC8A9; --accent:#D62E62; --accent-ink:#AC1D4C;
+  }
+  html,body{height:100%}
+  body{margin:0; background:var(--bg); font-family:'Karla',system-ui,sans-serif; color:var(--fg)}
+  /* brand splash while the CMS bundle loads */
+  #boot{
+    position:fixed; inset:0; z-index:9; display:grid; place-items:center;
+    background:var(--bg); text-align:center; padding:24px;
+    transition:opacity .4s ease;
+  }
+  #boot .mark{font-family:'Italianno',cursive; font-size:64px; line-height:1; color:var(--fg)}
+  #boot .sub{
+    margin-top:6px; font-size:10.5px; letter-spacing:.24em; text-transform:uppercase;
+    color:var(--accent-ink); font-weight:700;
+  }
+  #boot .hint{margin-top:18px; font-size:13.5px; color:var(--fg-2); max-width:34ch; line-height:1.6}
+  /* nudge the CMS chrome toward the site palette */
+  #nc-root [class*="AppHeader"]{background:var(--fg) !important}
+  #nc-root [class*="Card"], #nc-root [class*="WorkflowCard"]{border-radius:14px !important}
+</style>
+</head>
+<body>
+<div id="boot">
+  <div>
+    <div class="mark">nyxika</div>
+    <div class="sub">admin</div>
+    <div class="hint">Завантаження редактора… Якщо нічого не з'явилось — перевір, що сайт відкритий через https, а не з файлу.</div>
+  </div>
+</div>
+<script src="https://unpkg.com/@sveltia/cms/dist/sveltia-cms.js"></script>
+<script>
+  // hide the splash once the editor has mounted
+  var t0 = Date.now();
+  var iv = setInterval(function(){
+    var root = document.getElementById('nc-root');
+    if ((root && root.children.length) || Date.now() - t0 > 15000) {
+      clearInterval(iv);
+      var b = document.getElementById('boot');
+      if (b) { b.style.opacity = '0'; setTimeout(function(){ b.remove() }, 420); }
+    }
+  }, 300);
+</script>
+</body>
+</html>

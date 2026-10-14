@@ -1,0 +1,143 @@
+{
+  "characters": [
+    {
+      "id": "lantern",
+      "name": "Tomoshibi",
+      "tag": "Lantern spirit",
+      "tag_uk": "Дух ліхтаря",
+      "card": "img/card-lantern.jpg",
+      "full": "img/full-lantern.jpg",
+      "featured": true
+    },
+    {
+      "id": "eliza",
+      "name": "Eliza",
+      "tag": "Frost witch",
+      "tag_uk": "Крижана відьма",
+      "card": "img/card-eliza.jpg",
+      "full": "img/full-eliza.jpg",
+      "featured": true
+    },
+    {
+      "id": "vampire",
+      "name": "Carmine",
+      "tag": "Vampire",
+      "tag_uk": "Вампірка",
+      "card": "img/card-vampire.jpg",
+      "full": "img/full-vampire.jpg",
+      "featured": true
+    },
+    {
+      "id": "greenwitch",
+      "name": "Wisp",
+      "tag": "Witch",
+      "tag_uk": "Відьма",
+      "card": "img/card-greenwitch.jpg",
+      "full": "img/full-greenwitch.jpg",
+      "featured": false
+    },
+    {
+      "id": "bunnymaid",
+      "name": "Porcelain",
+      "tag": "Bunny maid",
+      "tag_uk": "Зайчиха-покоївка",
+      "card": "img/card-bunnymaid.jpg",
+      "full": "img/full-bunnymaid.jpg",
+      "featured": false
+    },
+    {
+      "id": "kitsune",
+      "name": "Vesper",
+      "tag": "Kitsune",
+      "tag_uk": "Кіцуне",
+      "card": "img/card-kitsune.jpg",
+      "full": "img/full-kitsune.jpg",
+      "featured": false
+    },
+    {
+      "id": "verdigris",
+      "name": "Verdigris",
+      "tag": "Dragonkin",
+      "tag_uk": "Драконіда",
+      "card": "img/card-verdigris.jpg",
+      "full": "img/full-verdigris.jpg",
+      "featured": false
+    },
+    {
+      "id": "ember",
+      "name": "Ember",
+      "tag": "Demon",
+      "tag_uk": "Демониця",
+      "card": "img/card-ember.jpg",
+      "full": "img/full-ember.jpg",
+      "featured": false
+    },
+    {
+      "id": "biker",
+      "name": "Static",
+      "tag": "Wolf · Rider",
+      "tag_uk": "Вовчиця · Байкерка",
+      "card": "img/card-biker.jpg",
+      "full": "img/full-biker.jpg",
+      "featured": false
+    }
+  ],
+  "backgrounds": [
+    {
+      "id": "bg-night",
+      "name": "Witch's study",
+      "name_uk": "Кабінет відьми",
+      "tag": "Night",
+      "tag_uk": "Ніч",
+      "card": "img/card-bg-night.jpg",
+      "full": "img/full-bg-night.jpg"
+    },
+    {
+      "id": "bg-dusk",
+      "name": "Witch's study",
+      "name_uk": "Кабінет відьми",
+      "tag": "Dusk",
+      "tag_uk": "Сутінки",
+      "card": "img/card-bg-dusk.jpg",
+      "full": "img/full-bg-dusk.jpg"
+    },
+    {
+      "id": "bg-day",
+      "name": "Witch's study",
+      "name_uk": "Кабінет відьми",
+      "tag": "Day",
+      "tag_uk": "День",
+      "card": "img/card-bg-day.jpg",
+      "full": "img/full-bg-day.jpg"
+    },
+    {
+      "id": "bg-ship",
+      "name": "Ship bridge",
+      "name_uk": "Місток корабля",
+      "tag": "Sci-fi interior",
+      "tag_uk": "Sci-fi інтер'єр",
+      "card": "img/card-bg-ship.jpg",
+      "full": "img/full-bg-ship.jpg"
+    }
+  ],
+  "halfbody": [
+    {
+      "id": "hb-spider",
+      "name": "Spider spirit",
+      "name_uk": "Павучий дух",
+      "tag": "Bust",
+      "tag_uk": "Бюст",
+      "card": "img/card-hb-spider.jpg",
+      "full": "img/full-hb-spider.jpg"
+    },
+    {
+      "id": "hb-corridor",
+      "name": "Night corridor",
+      "name_uk": "Нічний коридор",
+      "tag": "Half body",
+      "tag_uk": "Half body",
+      "card": "img/card-hb-corridor.jpg",
+      "full": "img/full-hb-corridor.jpg"
+    }
+  ]
+}

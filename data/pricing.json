@@ -1,0 +1,85 @@
+{
+  "tiers": [
+    {
+      "key": "sketch",
+      "featured": false,
+      "bust": 20,
+      "half": 25,
+      "full": 35
+    },
+    {
+      "key": "lineart",
+      "featured": false,
+      "bust": 30,
+      "half": 40,
+      "full": 55
+    },
+    {
+      "key": "flat",
+      "featured": false,
+      "bust": 40,
+      "half": 50,
+      "full": 65
+    },
+    {
+      "key": "render",
+      "featured": true,
+      "bust": 50,
+      "half": 65,
+      "full": 85
+    }
+  ],
+  "addons": [
+    {
+      "label": "Alternative outfit",
+      "label_uk": "Альтернативний аутфіт",
+      "price": "+$30"
+    },
+    {
+      "label": "Chibi version",
+      "label_uk": "Чібі-версія",
+      "price": "+$20"
+    },
+    {
+      "label": "Spirit / beast form",
+      "label_uk": "Духовна / звіряча форма",
+      "price": "+$40"
+    },
+    {
+      "label": "Additional character",
+      "label_uk": "Додатковий персонаж",
+      "price": "+50%"
+    },
+    {
+      "label": "2 additional expressions",
+      "label_uk": "2 додаткові емоції",
+      "price": "+$20"
+    },
+    {
+      "label": "Back view",
+      "label_uk": "Вид зі спини",
+      "price": "+$30"
+    },
+    {
+      "label": "Additional pose / version",
+      "label_uk": "Додаткова поза / версія",
+      "price": "+$25"
+    },
+    {
+      "label": "Complex POV / foreshortening",
+      "label_uk": "Складний ракурс / перспектива",
+      "price": "+$10–40"
+    },
+    {
+      "label": "Detailed background",
+      "label_uk": "Опрацьований фон",
+      "price": "from $30"
+    },
+    {
+      "label": "NSFW unlock",
+      "label_uk": "NSFW-версія",
+      "price": "+$55"
+    }
+  ],
+  "commercial": "+50%"
+}

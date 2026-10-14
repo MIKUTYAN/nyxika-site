@@ -1,0 +1,2333 @@
+<title>nyxika</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400&family=Italianno&family=Karla:ital,wght@0,400;0,500;0,600;0,700;1,400&family=Playfair+Display:ital,wght@0,500;0,600;0,700;0,800;0,900;1,500;1,700&family=Caveat:wght@500;600;700&display=swap">
+
+<style>
+/* Layout: fixed left rail of section links; single reading column beside it.
+   The diagonal light/dark split and the four-point sparkle come from Nika's own
+   character sheets and run through hero, cards and section marks. */
+/* Layout: fixed left rail of section links; single reading column beside it.
+   Warm white throughout — the palette is paper, ink and a soft clay accent.
+   The diagonal light/dark split and the four-point sparkle come from Nika's
+   own character sheets and run through hero, cards and section marks.
+   Committed single light theme: this page is warm white on every device. */
+:root{
+  color-scheme:light;
+  --bg:#FDF6E9; --bg-2:#F8EAD3; --surface:#FFFCF5; --surface-2:#FBF2E1;
+  --fg:#3A2E28; --fg-2:#76665B; --fg-3:#A59283;
+  --line:#EDDFC6; --line-2:#DCC8A9;
+  /* pulled from the rainbow foxfire tail: pink, sky, mint, gold, coral */
+  --c-pink:#E03A74; --c-sky:#2F8FCE; --c-teal:#2FA394; --c-gold:#C9992B; --c-coral:#EE6A35;
+  --grad:linear-gradient(100deg,#C21F43 0%,#E03A74 17%,#EE6A35 34%,#C9992B 49%,#2FA394 66%,#2F8FCE 83%,#C21F43 100%);
+  --accent:#D62E62; --accent-ink:#AC1D4C; --accent-soft:#FCEAF0;
+  --accent-2:#2F8FCE; --gold:#C9992B;
+  --f-hand:'Caveat','Bradley Hand','Segoe Script',cursive;
+  --shadow:0 1px 2px rgba(58,46,40,.05), 0 10px 30px -12px rgba(58,46,40,.16);
+  --shadow-lg:0 2px 4px rgba(58,46,40,.06), 0 28px 60px -22px rgba(58,46,40,.26);
+  --rail:214px;
+  --f-display:'Playfair Display','Iowan Old Style',Georgia,'Times New Roman',serif;
+  --f-serif:'Cormorant Garamond','Iowan Old Style',Georgia,serif;
+  --f-script:'Italianno','Snell Roundhand','Apple Chancery',cursive;
+  --f-body:'Karla','Avenir Next','Segoe UI',system-ui,sans-serif;
+  --ease:cubic-bezier(.22,.61,.36,1);
+}
+
+*{box-sizing:border-box}
+img{height:auto}   /* cancels the width/height attribute presentation hint */
+body{
+  background:var(--bg); color:var(--fg);
+  font-family:var(--f-body); font-size:16px; line-height:1.68;
+  -webkit-font-smoothing:antialiased; margin:0;
+  overflow-x:hidden;
+}
+html{scroll-behavior:smooth}
+@media (prefers-reduced-motion:reduce){ html{scroll-behavior:auto} }
+img{display:block; max-width:100%}
+a{color:inherit}
+h1,h2,h3,h4{margin:0; text-wrap:balance; font-weight:400}
+p,figure,blockquote,details{margin:0}
+button{font:inherit; color:inherit; background:none; border:0; cursor:pointer}
+
+/* ---------- rail ---------- */
+.rail{
+  position:fixed; inset:0 auto 0 0; width:var(--rail); z-index:60;
+  background:var(--surface-2); border-right:1px solid var(--line);
+  display:flex; flex-direction:column;
+  padding:28px 0 calc(18px + env(safe-area-inset-bottom,0px));
+  padding-top:calc(28px + env(safe-area-inset-top,0px));
+}
+.chibi-stage{position:relative; display:flex; justify-content:center; padding:26px 12px 4px}
+.chibi-btn{
+  position:relative; display:block; border:0; padding:0; background:none;
+  cursor:pointer; line-height:0; border-radius:50%;
+}
+.chibi-btn:focus-visible{outline:2px solid var(--accent); outline-offset:6px}
+.chibi-float{display:block; animation:bob 5.5s ease-in-out infinite}
+.chibi{
+  width:158px; height:auto; display:block; position:relative; z-index:2;
+  filter:drop-shadow(0 8px 18px rgba(58,46,40,.22));
+  transition:filter .55s var(--ease);
+}
+@keyframes bob{ 0%,100%{transform:translateY(0) rotate(-2deg)} 50%{transform:translateY(-7px) rotate(2deg)} }
+
+/* the glow that lifts her drawn stars when she is tapped */
+.chibi-glow{
+  position:absolute; inset:-18%; border-radius:50%; pointer-events:none; z-index:1;
+  background:radial-gradient(circle, rgba(255,210,96,.6) 0%, rgba(224,58,116,.3) 40%, rgba(47,143,206,.14) 60%, transparent 74%);
+  opacity:0; transform:scale(.72); transition:opacity .6s var(--ease), transform .6s var(--ease);
+}
+.cstar{position:absolute; z-index:3; pointer-events:none; opacity:0; transform:scale(.2)}
+.cstar.c1{top:-6%;  left:4%;   width:26px; color:#FFC94A}
+.cstar.c2{top:10%;  right:-6%; width:20px; color:#5FD2EE}
+.cstar.c3{bottom:16%; left:-9%; width:23px; color:#E03A74}
+.cstar.c4{bottom:-2%; right:10%; width:18px; color:#FFC94A}
+.cstar.c5{top:44%;  left:-12%; width:15px; color:#FFE08A}
+.cstar.c6{top:-12%; right:24%; width:16px; color:#5FD2EE}
+
+.chibi-stage.sparkling .chibi-glow{opacity:1; transform:scale(1)}
+.chibi-stage.sparkling .chibi{
+  animation:pop .95s var(--ease);
+  filter:drop-shadow(0 0 18px rgba(255,201,74,.9)) drop-shadow(0 0 34px rgba(224,58,116,.45)) drop-shadow(0 8px 18px rgba(58,46,40,.22));
+}
+.chibi-stage.sparkling .cstar{animation:twinkle 1.25s var(--ease) forwards}
+.chibi-stage.sparkling .c2{animation-delay:.08s}
+.chibi-stage.sparkling .c3{animation-delay:.16s}
+.chibi-stage.sparkling .c4{animation-delay:.05s}
+.chibi-stage.sparkling .c5{animation-delay:.22s}
+.chibi-stage.sparkling .c6{animation-delay:.13s}
+@keyframes pop{
+  0%{transform:scale(1) rotate(0)}
+  20%{transform:scale(1.12) rotate(-5deg)}
+  46%{transform:scale(.965) rotate(3deg)}
+  70%{transform:scale(1.045) rotate(-1.5deg)}
+  100%{transform:scale(1) rotate(0)}
+}
+@keyframes twinkle{
+  0%{opacity:0; transform:scale(.2) rotate(0)}
+  30%{opacity:1; transform:scale(1.2) rotate(40deg)}
+  62%{opacity:.9; transform:scale(.9) rotate(78deg)}
+  100%{opacity:0; transform:scale(.45) rotate(128deg)}
+}
+
+/* the little hello taped next to her */
+.chibi-bubble{
+  position:absolute; z-index:4; top:2px; left:10px;
+  font-family:var(--f-hand); font-weight:700; font-size:22px; line-height:1;
+  color:var(--accent-ink); background:var(--surface);
+  border:1.6px solid var(--line-2); border-radius:14px 14px 3px 14px;
+  padding:7px 14px; box-shadow:var(--shadow); white-space:nowrap;
+  animation:bubfloat 4.2s ease-in-out infinite;
+}
+.chibi-bubble::before, .chibi-bubble::after{
+  content:''; position:absolute; right:12px; width:0; height:0;
+  border:8px solid transparent; border-bottom:0;
+}
+.chibi-bubble::before{bottom:-8px; border-top-color:var(--line-2)}
+.chibi-bubble::after{bottom:-6px; border-top-color:var(--surface); border-width:7px; border-bottom:0; right:13px}
+@keyframes bubfloat{ 0%,100%{transform:translateY(0) rotate(-3deg)} 50%{transform:translateY(-4px) rotate(-1deg)} }
+
+@media (prefers-reduced-motion:reduce){
+  .chibi-float, .chibi-bubble{animation:none}
+  .chibi-stage.sparkling .chibi{animation:none}
+  .chibi-stage.sparkling .cstar{animation:none; opacity:1; transform:scale(1)}
+}
+.chibi-stage-bar{display:none}
+.brand{padding:0 24px 26px; display:block; text-decoration:none}
+.brand .mark{font-family:var(--f-script); font-size:44px; line-height:.9; color:var(--fg); display:block}
+.brand .sub{
+  font-size:9.5px; letter-spacing:.24em; text-transform:uppercase;
+  color:var(--fg-3); margin-top:8px; display:block; font-weight:500;
+}
+.rail nav{display:flex; flex-direction:column; gap:1px; padding:0 14px; flex:1}
+.rail nav a{
+  display:flex; align-items:center; gap:10px; text-decoration:none;
+  padding:9px 10px; border-radius:7px; color:var(--fg-2);
+  font-size:13.5px; letter-spacing:.012em;
+  transition:background .25s var(--ease), color .25s var(--ease);
+}
+.rail nav a .dot{
+  width:5px; height:5px; border-radius:50%; background:currentColor;
+  opacity:.28; flex:none; transition:opacity .25s var(--ease), transform .25s var(--ease);
+}
+.rail nav a:hover{color:var(--fg); background:var(--accent-soft)}
+.rail nav a.on{color:var(--accent-ink); background:var(--accent-soft); font-weight:600}
+.rail nav a.on .dot{opacity:1; transform:scale(1.5)}
+
+.lang{padding:16px 18px 0; border-top:1px solid var(--line); margin:16px 14px 0}
+.lang-h{
+  font-size:9.5px; letter-spacing:.2em; text-transform:uppercase;
+  color:var(--fg-3); margin-bottom:9px; font-weight:600;
+}
+.lang-list{display:flex; flex-wrap:wrap; gap:5px}
+.lang-list button{
+  font-size:11.5px; padding:4px 8px; border-radius:5px; color:var(--fg-2);
+  border:1px solid transparent; letter-spacing:.03em;
+  transition:all .22s var(--ease);
+}
+.lang-list button:hover{color:var(--fg); background:var(--bg-2)}
+.lang-list button.on{color:var(--accent-ink); border-color:var(--line-2); background:var(--surface); font-weight:600}
+
+/* mobile bar */
+.topbar{display:none}
+.scrim{
+  position:fixed; inset:0; background:rgba(20,16,26,.42); z-index:55;
+  opacity:0; pointer-events:none; transition:opacity .3s var(--ease);
+  backdrop-filter:blur(2px);
+}
+.scrim.on{opacity:1; pointer-events:auto}
+
+/* ---------- shell ---------- */
+.shell{margin-left:var(--rail)}
+.wrap{position:relative; max-width:1040px; margin:0 auto; padding-inline:clamp(20px,5vw,56px)}
+
+section{position:relative}
+.sec{padding-block:clamp(76px,11vw,132px)}
+.sec + .sec{border-top:1px solid var(--line)}
+.tint{background:var(--bg-2)}
+
+.eyebrow{
+  display:flex; align-items:center; gap:9px;
+  font-size:10.5px; letter-spacing:.26em; text-transform:uppercase;
+  color:var(--accent-ink); font-weight:700; margin-bottom:20px;
+}
+.eyebrow svg{width:11px; height:11px; flex:none; opacity:.85}
+h2.t{
+  font-family:var(--f-display); font-weight:700;
+  font-size:clamp(30px,5vw,50px); line-height:1.14; letter-spacing:-.016em;
+  max-width:19ch;
+}
+.lede{
+  margin-top:18px; max-width:60ch; color:var(--fg-2);
+  font-size:clamp(15.5px,1.6vw,17.5px); line-height:1.72;
+}
+
+/* ---------- hero ---------- */
+.hero{
+  padding-top:clamp(56px,9vw,104px); padding-bottom:clamp(64px,9vw,112px);
+  position:relative; overflow:hidden;
+}
+.hero::before{
+  content:''; position:absolute; top:-18%; right:-14%;
+  width:62vw; height:62vw; max-width:760px; max-height:760px; border-radius:50%;
+  background:
+    radial-gradient(circle at 62% 30%, rgba(240,96,155,.14) 0%, transparent 58%),
+    radial-gradient(circle at 34% 62%, rgba(95,184,232,.13) 0%, transparent 56%),
+    radial-gradient(circle at 48% 46%, rgba(255,194,92,.13) 0%, transparent 60%);
+  pointer-events:none; z-index:0;
+}
+.hero-grid{
+  position:relative; z-index:1; display:grid; gap:clamp(34px,5vw,64px);
+  grid-template-columns:1.12fr .88fr; align-items:center;
+}
+.hero-grid > *{min-width:0}
+.hero-kicker{
+  font-size:10.5px; letter-spacing:.3em; text-transform:uppercase;
+  color:var(--fg-3); font-weight:600; margin-bottom:22px;
+}
+h1{
+  font-family:var(--f-display); font-weight:800;
+  font-size:clamp(37px,5.9vw,66px); line-height:1.08; letter-spacing:-.022em;
+  overflow-wrap:break-word;
+}
+h1 em{
+  font-family:var(--f-script); font-style:normal; font-weight:400;
+  font-size:1.38em; line-height:.8; letter-spacing:.005em;
+  display:inline-block; vertical-align:-.1em;
+}
+/* soft iridescent sweep across the headline, in the tail's colours */
+.shimmer{
+  color:var(--fg);                       /* fallback if background-clip:text is unsupported */
+  background:var(--grad); background-size:190% 100%;
+  -webkit-background-clip:text; background-clip:text;
+  -webkit-text-fill-color:transparent; color:transparent;
+  animation:sheen 18s linear infinite;
+  padding-bottom:.06em;                  /* keeps descenders from clipping */
+}
+@keyframes sheen{ to{ background-position:190% 0 } }
+@media (prefers-reduced-motion:reduce){ .shimmer{animation:none} }
+.hero-sub{
+  margin-top:24px; max-width:48ch; color:var(--fg-2);
+  font-size:clamp(16px,1.75vw,18.5px); line-height:1.68;
+}
+.hero-cta{display:flex; flex-wrap:wrap; gap:11px; margin-top:34px}
+.btn{
+  display:inline-flex; align-items:center; gap:9px; text-decoration:none;
+  padding:13px 24px; border-radius:999px; font-size:14.5px; font-weight:600;
+  letter-spacing:.015em; transition:all .26s var(--ease); border:1px solid transparent;
+}
+.btn-1{
+  background:var(--grad); background-size:220% 100%; background-position:0 0;
+  color:#fff; font-weight:700; box-shadow:0 6px 20px -6px rgba(232,67,127,.45);
+  transition:background-position .9s var(--ease), transform .26s var(--ease), box-shadow .26s var(--ease);
+}
+.btn-1:hover{background-position:100% 0; transform:translateY(-2px); box-shadow:0 12px 30px -8px rgba(232,67,127,.55)}
+.btn-2{border-color:var(--line-2); color:var(--fg)}
+.btn-2:hover{border-color:var(--accent); color:var(--accent-ink); background:var(--accent-soft)}
+.btn svg{width:15px; height:15px; flex:none}
+
+.trust{
+  display:flex; flex-wrap:wrap; gap:9px 22px; margin-top:32px;
+  padding-top:22px; border-top:1px solid var(--line);
+}
+.trust span{
+  display:inline-flex; align-items:center; gap:8px;
+  font-size:10.5px; letter-spacing:.17em; text-transform:uppercase;
+  font-weight:700; color:var(--fg-2);
+}
+.trust svg{width:13px; height:13px; color:var(--gold); flex:none}
+
+.board{position:relative; width:100%; max-width:418px; justify-self:end; padding:30px 10px 62px}
+.board-pin{position:relative; transform:rotate(-2.4deg)}
+.board-photo{
+  display:block; width:100%; height:auto; aspect-ratio:4/5; object-fit:cover; object-position:50% 28%;
+  background:#fff; border:11px solid #FFFDF8; border-bottom-width:54px;
+  box-shadow:var(--shadow-lg);
+}
+.board-cap{
+  position:absolute; left:0; right:0; bottom:9px; text-align:center;
+  font-family:var(--f-script); font-size:36px; line-height:1; color:var(--fg-2);
+}
+.tape{
+  position:absolute; z-index:3; width:clamp(68px,9vw,96px); height:clamp(22px,2.6vw,29px);
+  background:linear-gradient(180deg, rgba(238,210,142,.82), rgba(222,189,112,.72));
+  border-left:1px dashed rgba(255,255,255,.55); border-right:1px dashed rgba(255,255,255,.55);
+  box-shadow:0 2px 6px rgba(58,46,40,.14);
+}
+.tape-a{top:-12px; left:-20px; transform:rotate(-36deg)}
+.tape-b{bottom:36px; right:-22px; transform:rotate(-32deg)}
+.note{
+  position:absolute; z-index:4; font-family:var(--f-hand); font-weight:600;
+  font-size:clamp(17px,2vw,22px); line-height:1.18; max-width:11ch;
+}
+.note-a{top:-18px; left:-14px; transform:rotate(-6deg); color:var(--accent-ink)}
+.note-b{bottom:0; left:-4px; transform:rotate(-3deg); color:var(--gold); max-width:15ch}
+.scribble{position:absolute; z-index:4; pointer-events:none}
+.scribble.sc-a{top:24px; left:62px; width:54px; color:var(--accent-ink); opacity:.75}
+.scribble.sc-b{bottom:34px; left:120px; width:44px; color:var(--gold); opacity:.8; transform:rotate(-168deg)}
+/* the hero sticker sits in the right gutter, clear of the headline */
+.board .sticker.s5{left:auto; right:-84px; top:40%; bottom:auto; width:clamp(68px,7vw,94px); opacity:.36}
+@media (max-width:980px){ .board .sticker.s5{display:none} }
+.spark{position:absolute; color:var(--c-pink); opacity:.62; pointer-events:none; z-index:4}
+.spark.a{top:6px; right:4px; width:26px}
+.spark.b{top:42%; right:-18px; width:16px; opacity:.5; color:var(--c-sky)}
+.spark.c{bottom:84px; left:-18px; width:13px; opacity:.5; color:var(--gold)}
+
+/* ---------- story ---------- */
+.story{display:grid; grid-template-columns:auto 1fr; gap:clamp(26px,4vw,52px)}
+.story-line{width:1px; background:linear-gradient(180deg, var(--accent) 0%, var(--line) 38%, transparent 100%)}
+.story-body{max-width:66ch}
+.story-body p{margin-top:18px; color:var(--fg-2); font-size:16.5px; line-height:1.8}
+.story-body p:first-of-type{margin-top:26px}
+.story-body p.lead{
+  font-family:var(--f-serif); font-size:clamp(21px,2.7vw,26px); line-height:1.52;
+  color:var(--fg); font-style:italic; font-weight:500; margin-top:24px;
+}
+.story-body p.last{
+  color:var(--fg); font-family:var(--f-serif); font-style:italic; font-weight:500;
+  font-size:clamp(20px,2.5vw,24px); line-height:1.55; margin-top:30px;
+  padding-top:26px; border-top:1px solid var(--line);
+}
+.story-photo{
+  margin-top:38px; width:100%; max-width:216px; border-radius:16px; overflow:hidden;
+  border:1px solid var(--line); box-shadow:var(--shadow); transform:rotate(-1.6deg);
+}
+.story-photo img{display:block; width:100%; height:auto; aspect-ratio:1/1; object-fit:cover}
+
+/* ---------- gallery ---------- */
+.gal-head{display:flex; align-items:flex-end; justify-content:space-between; gap:24px; flex-wrap:wrap}
+.arrows{display:flex; gap:8px}
+.arrows button{
+  width:40px; height:40px; border-radius:50%; border:1px solid var(--line-2);
+  display:grid; place-items:center; color:var(--fg-2);
+  transition:all .24s var(--ease);
+}
+.arrows button:hover{background:var(--accent); border-color:var(--accent); color:#fff}
+.arrows svg{width:16px; height:16px}
+
+.track-outer{margin-top:34px; position:relative}
+.track{
+  display:flex; gap:18px; overflow-x:auto; scroll-snap-type:x mandatory;
+  padding:4px 0 22px; scroll-padding-inline:0;
+  scrollbar-width:thin; scrollbar-color:var(--line-2) transparent;
+  -webkit-overflow-scrolling:touch;
+}
+.track::-webkit-scrollbar{height:5px}
+.track::-webkit-scrollbar-thumb{background:var(--line-2); border-radius:9px}
+.track::-webkit-scrollbar-track{background:transparent}
+.card{
+  flex:0 0 clamp(214px,27vw,268px); scroll-snap-align:start;
+  display:flex; flex-direction:column; perspective:1000px;
+}
+.card-inner{
+  position:relative; aspect-ratio:3/4; transform-style:preserve-3d;
+  transition:transform .66s var(--ease);
+}
+.card.flipped .card-inner{transform:rotateY(180deg)}
+.card-face{
+  position:absolute; inset:0; border-radius:14px; overflow:hidden;
+  backface-visibility:hidden; -webkit-backface-visibility:hidden;
+}
+.card-front{border:0; padding:0; display:block; width:100%; cursor:pointer; background:none}
+.card-back{
+  transform:rotateY(180deg); background:var(--surface);
+  border:1px solid var(--line-2); box-shadow:var(--shadow);
+  display:flex; flex-direction:column; justify-content:center; align-items:center;
+  gap:9px; padding:20px 16px; text-align:center;
+}
+.card-back p{font-family:var(--f-hand); font-size:21px; line-height:1.2; color:var(--fg); max-width:16ch}
+.card-back a, .card-back button{
+  display:block; width:100%; padding:9px 10px; border-radius:9px; font-size:12.5px;
+  font-weight:700; letter-spacing:.04em; text-decoration:none; border:1px solid var(--line-2);
+  color:var(--fg); background:var(--bg); transition:all .22s var(--ease); text-align:center;
+}
+.card-back a:hover{background:var(--accent); border-color:var(--accent); color:#fff}
+.card-back .mini{border:0; background:none; font-size:11.5px; letter-spacing:.14em;
+  text-transform:uppercase; color:var(--fg-3); font-weight:600; padding:2px}
+.card-back .mini:hover{color:var(--accent-ink)}
+.flip-cue{
+  position:absolute; right:9px; bottom:9px; z-index:2;
+  padding:5px 10px; border-radius:999px; font-size:10px; font-weight:700;
+  letter-spacing:.12em; text-transform:uppercase;
+  background:rgba(255,252,245,.9); color:var(--fg-2); backdrop-filter:blur(3px);
+  box-shadow:0 2px 8px rgba(58,46,40,.16);
+}
+.card-img{
+  display:block; position:relative; width:100%; height:100%; border-radius:14px;
+  overflow:hidden; background:var(--bg-2); box-shadow:var(--shadow); border:1px solid var(--line);
+}
+.card-img img{display:block; width:100%; height:100%; object-fit:cover; transition:transform .7s var(--ease)}
+.card-front:hover .card-img img{transform:scale(1.045)}
+.card-img::after{
+  content:''; position:absolute; inset:0;
+  background:linear-gradient(to top, rgba(26,20,36,.42) 0%, transparent 42%);
+  opacity:0; transition:opacity .35s var(--ease);
+}
+.card-front:hover .card-img::after{opacity:1}
+.card-meta{margin-top:13px; display:flex; align-items:baseline; justify-content:space-between; gap:10px}
+.card-name{font-family:var(--f-display); font-weight:600; font-size:20px; letter-spacing:-.005em}
+.card-tag{
+  font-size:9.5px; letter-spacing:.17em; text-transform:uppercase;
+  color:var(--fg-3); font-weight:600; white-space:nowrap;
+}
+.hint{margin-top:4px; font-size:12.5px; color:var(--fg-3)}
+
+.socials{
+  margin-top:46px; padding-top:34px; border-top:1px solid var(--line);
+}
+.socials-h{
+  font-size:10.5px; letter-spacing:.24em; text-transform:uppercase;
+  color:var(--fg-3); font-weight:600; margin-bottom:18px;
+}
+.social-row{display:flex; flex-wrap:wrap; gap:10px}
+.social{
+  display:inline-flex; align-items:center; gap:10px; text-decoration:none;
+  padding:11px 17px; border-radius:11px; border:1px solid var(--line);
+  background:var(--surface); font-size:14px; font-weight:500;
+  transition:all .26s var(--ease); min-width:0;
+}
+.social:hover{border-color:var(--accent); color:var(--accent-ink); transform:translateY(-2px); box-shadow:var(--shadow)}
+.social svg{width:17px; height:17px; flex:none; color:var(--fg-2)}
+.social:hover svg{color:var(--accent)}
+.social .h{display:block; color:var(--fg-3); font-size:12.5px; font-weight:400; overflow:hidden; text-overflow:ellipsis}
+
+/* ---------- made for you ---------- */
+.foryou{display:grid; grid-template-columns:1fr 1fr; gap:clamp(30px,5vw,64px); align-items:start}
+.foryou-body p{margin-top:20px; color:var(--fg-2); font-size:16.5px; line-height:1.78}
+.heart{
+  margin-top:32px; padding:24px 26px; border-radius:16px;
+  background:var(--accent-soft); border:1px solid var(--line);
+  font-family:var(--f-serif); font-style:italic; font-weight:500;
+  font-size:clamp(20px,2.4vw,24px); line-height:1.5; color:var(--fg);
+}
+
+/* ---------- reviews ---------- */
+.rev-track{
+  display:flex; gap:14px; overflow-x:auto; padding:2px 0 20px;
+  scroll-snap-type:x proximity; scrollbar-width:thin;
+  scrollbar-color:var(--line-2) transparent;
+}
+.rev-track::-webkit-scrollbar{height:5px}
+.rev-track::-webkit-scrollbar-thumb{background:var(--line-2); border-radius:9px}
+.rev{
+  flex:0 0 clamp(232px,30vw,290px); scroll-snap-align:start;
+  background:var(--surface); border:1px solid var(--line); border-radius:14px;
+  padding:20px 21px; box-shadow:var(--shadow); display:flex; flex-direction:column; gap:14px;
+}
+.rev-q{font-size:14.5px; line-height:1.62; color:var(--fg)}
+.rev-w{display:flex; align-items:center; gap:9px; margin-top:auto}
+.rev-av{
+  width:27px; height:27px; border-radius:50%; flex:none; display:grid; place-items:center;
+  background:var(--accent-soft); color:var(--accent-ink);
+  font-size:11.5px; font-weight:700; letter-spacing:.02em;
+}
+.rev-n{font-size:12.5px; color:var(--fg-2); font-weight:500}
+.stars{display:flex; gap:2px; color:var(--accent)}
+.stars svg{width:11px; height:11px}
+
+/* ---------- steps ---------- */
+.steps{margin-top:46px; display:grid; gap:0}
+.step{
+  display:grid; grid-template-columns:62px 1fr; gap:clamp(16px,3vw,32px);
+  padding-block:26px; border-top:1px solid var(--line);
+}
+.step:last-child{border-bottom:1px solid var(--line)}
+.step-n{
+  font-family:var(--f-display); font-size:28px; line-height:1;
+  font-weight:700; font-variant-numeric:tabular-nums; padding-top:5px;
+  background:var(--grad); background-size:200% 100%;
+  -webkit-background-clip:text; background-clip:text; -webkit-text-fill-color:transparent; color:transparent;
+}
+.step h3{font-family:var(--f-display); font-size:clamp(20px,2.4vw,25px); font-weight:600; line-height:1.28}
+.step p{margin-top:9px; color:var(--fg-2); font-size:15.5px; line-height:1.72; max-width:58ch}
+
+/* ---------- pricing ---------- */
+.price-wrap{position:relative}
+.tiers{
+  margin-top:40px; display:grid; gap:14px;
+  grid-template-columns:repeat(4,1fr);
+}
+.tier{
+  background:var(--surface); border:1px solid var(--line); border-radius:16px;
+  padding:24px 20px 20px; box-shadow:var(--shadow);
+  display:flex; flex-direction:column; min-width:0;
+  transition:transform .3s var(--ease), box-shadow .3s var(--ease), border-color .3s var(--ease);
+}
+.tier:hover{transform:translateY(-4px); box-shadow:var(--shadow-lg); border-color:var(--line-2)}
+.tier.feat{border-color:var(--c-pink); background:var(--accent-soft); box-shadow:0 10px 34px -14px rgba(240,96,155,.4)}
+.tier-h{
+  font-size:10.5px; letter-spacing:.2em; text-transform:uppercase;
+  font-weight:700; color:var(--fg-2); margin-bottom:4px;
+}
+.tier.feat .tier-h{color:var(--accent-ink)}
+.tier-note{font-size:12px; color:var(--fg-3); margin-bottom:17px; min-height:2.6em; line-height:1.45}
+.rows{display:flex; flex-direction:column; gap:1px; margin-top:auto}
+.row{
+  display:flex; align-items:baseline; justify-content:space-between; gap:10px;
+  padding:9px 0; border-top:1px solid var(--line);
+}
+.row:first-child{border-top:0}
+.row .k{font-size:13.5px; color:var(--fg-2)}
+.row .v{
+  font-family:var(--f-display); font-size:21px; font-weight:600; color:var(--fg);
+  font-variant-numeric:tabular-nums;
+}
+.tier.feat .row .v{color:var(--accent-ink)}
+
+.addons{
+  margin-top:40px; display:grid; grid-template-columns:1.25fr .75fr;
+  gap:clamp(20px,3.5vw,38px);
+}
+.panel{
+  background:var(--surface); border:1px solid var(--line); border-radius:16px;
+  padding:26px clamp(20px,3vw,28px); box-shadow:var(--shadow); min-width:0;
+}
+.panel-h{
+  display:flex; align-items:center; gap:9px; margin-bottom:18px;
+  font-size:10.5px; letter-spacing:.2em; text-transform:uppercase;
+  font-weight:700; color:var(--accent);
+}
+.panel-h svg{width:12px; height:12px}
+.addon-list{display:grid; grid-template-columns:repeat(auto-fit,minmax(210px,1fr)); gap:0 28px}
+.addon{
+  display:flex; align-items:baseline; justify-content:space-between; gap:12px;
+  padding:9px 0; border-top:1px solid var(--line); font-size:14.5px;
+}
+/* every row ruled: reads as one consistent table in 1 or 2 columns */
+.addon .k{color:var(--fg-2); min-width:0}
+.addon .v{color:var(--fg); font-weight:600; white-space:nowrap; font-variant-numeric:tabular-nums}
+.comm{background:var(--accent-soft); border-color:var(--line-2)}
+.comm .big{
+  font-family:var(--f-display); font-size:clamp(36px,5.2vw,50px); font-weight:800; line-height:1;
+  margin-bottom:12px; background:var(--grad); background-size:200% 100%;
+  -webkit-background-clip:text; background-clip:text; -webkit-text-fill-color:transparent; color:transparent;
+}
+.comm p{font-size:14px; color:var(--fg-2); line-height:1.65}
+.fineprint{margin-top:26px; font-size:13.5px; color:var(--fg-3); max-width:72ch; line-height:1.7}
+.price-cta{margin-top:34px; display:flex; flex-wrap:wrap; gap:12px; align-items:center}
+
+.sticker{
+  position:absolute; pointer-events:none; z-index:2;
+  image-rendering:pixelated; opacity:.5; z-index:0;
+  filter:drop-shadow(0 6px 14px rgba(58,46,40,.1));
+}
+.eyebrow, h1, h2.t, .lede, .card-meta, .steps, .tiers, .addons,
+.faq, .contact-grid, .rev-track, .track-outer, .socials, .price-cta, .fineprint{
+  position:relative; z-index:1;
+}
+.sticker.s1{width:clamp(86px,10vw,132px); top:-22px; right:1%;  transform:rotate(9deg)}
+.sticker.s2{width:clamp(74px,8.5vw,112px); top:33%; right:-74px; transform:rotate(-12deg); opacity:.4}
+.sticker.s3{width:clamp(80px,9vw,120px); bottom:14%; left:-86px; transform:rotate(7deg); opacity:.42}
+.sticker.s4{width:clamp(70px,8vw,104px); bottom:-26px; right:12%; transform:rotate(-7deg)}
+.sticker.s5{width:clamp(72px,8vw,108px); top:3%;  left:-88px; transform:rotate(-9deg); opacity:.38}
+.sticker.s6{width:clamp(66px,7.5vw,98px); bottom:8%; right:-80px; transform:rotate(11deg); opacity:.4}
+.sticker.s7{width:clamp(78px,8.5vw,116px); bottom:2%; left:-92px; transform:rotate(6deg); opacity:.42}
+@media (max-width:760px){
+  .sticker{opacity:.34}
+  .sticker.s2,.sticker.s3,.sticker.s5,.sticker.s6{display:none}
+  .sticker.s1{width:72px; right:-6px; top:-16px}
+  .sticker.s4{width:62px; right:4%; bottom:-18px}
+  .sticker.s7{display:none}
+}
+
+/* ---------- faq ---------- */
+.faq{margin-top:40px; max-width:76ch}
+details{border-top:1px solid var(--line)}
+details:last-of-type{border-bottom:1px solid var(--line)}
+summary{
+  list-style:none; cursor:pointer; padding:21px 44px 21px 0; position:relative;
+  font-family:var(--f-display); font-size:clamp(18px,2.2vw,22px); font-weight:600;
+  line-height:1.38; transition:color .22s var(--ease);
+}
+summary::-webkit-details-marker{display:none}
+summary:hover{color:var(--accent-ink)}
+summary::after{
+  content:''; position:absolute; right:6px; top:50%; width:11px; height:11px;
+  border-right:1.5px solid var(--fg-3); border-bottom:1.5px solid var(--fg-3);
+  transform:translateY(-70%) rotate(45deg); transition:transform .3s var(--ease);
+}
+details[open] summary::after{transform:translateY(-20%) rotate(225deg)}
+details p{padding:0 8px 24px 0; color:var(--fg-2); font-size:15.5px; line-height:1.76; max-width:64ch}
+
+/* ---------- contact ---------- */
+.contact-grid{margin-top:38px; display:grid; grid-template-columns:1fr 1fr; gap:clamp(22px,4vw,44px); align-items:start}
+.mailbox{
+  background:var(--surface); border:1px solid var(--line); border-radius:16px;
+  padding:26px; box-shadow:var(--shadow);
+}
+.mail-l{font-size:10.5px; letter-spacing:.2em; text-transform:uppercase; color:var(--fg-3); font-weight:600}
+.mail-v{
+  margin-top:10px; font-size:clamp(15px,2vw,19px); font-family:var(--f-display); font-weight:500;
+  word-break:break-all; user-select:all; color:var(--fg);
+}
+.copy{
+  margin-top:18px; display:inline-flex; align-items:center; gap:8px;
+  padding:9px 16px; border-radius:999px; border:1px solid var(--line-2);
+  font-size:13.5px; font-weight:600; transition:all .24s var(--ease);
+}
+.copy:hover{border-color:var(--accent); color:var(--accent-ink); background:var(--accent-soft)}
+.copy svg{width:14px; height:14px}
+
+/* ---------- footer ---------- */
+footer{
+  border-top:1px solid var(--line); background:var(--surface-2);
+  padding-block:clamp(40px,6vw,62px);
+}
+.foot-top{display:flex; justify-content:space-between; gap:28px; flex-wrap:wrap; align-items:flex-start}
+.foot-mark{font-family:var(--f-script); font-size:40px; line-height:.9}
+.foot-links{display:flex; flex-wrap:wrap; gap:7px 18px; font-size:13.5px}
+.foot-links a{color:var(--fg-2); text-decoration:none; transition:color .22s var(--ease)}
+.foot-links a:hover{color:var(--accent-ink)}
+.legal{
+  margin-top:32px; padding-top:26px; border-top:1px solid var(--line);
+  font-size:12.5px; color:var(--fg-3); line-height:1.75; max-width:88ch;
+}
+.legal strong{color:var(--fg-2); font-weight:600}
+.legal p + p{margin-top:11px}
+
+/* ---------- "see more" tile at the end of the home track ---------- */
+.card-more{
+  flex:0 0 clamp(214px,27vw,268px); scroll-snap-align:start;
+  display:flex; flex-direction:column; text-decoration:none;
+}
+.more-inner{
+  display:flex; flex-direction:column; align-items:center; justify-content:center;
+  gap:10px; text-align:center; aspect-ratio:3/4; border-radius:14px; padding:24px 18px;
+  border:2px dashed var(--line-2); background:var(--surface-2);
+  transition:border-color .3s var(--ease), background .3s var(--ease), transform .3s var(--ease);
+}
+.card-more:hover .more-inner{border-color:var(--accent); background:var(--accent-soft); transform:translateY(-6px)}
+.more-ring{
+  width:52px; height:52px; border-radius:50%; display:grid; place-items:center;
+  background:var(--grad); background-size:180% 100%; color:#fff; flex:none;
+  box-shadow:0 6px 18px -6px rgba(214,46,98,.5);
+}
+.more-ring svg{width:20px; height:20px}
+.more-t{font-family:var(--f-display); font-weight:700; font-size:20px; color:var(--fg); line-height:1.2}
+.more-s{font-size:12.5px; color:var(--fg-2); line-height:1.5; max-width:22ch}
+.more-count{
+  font-size:10px; letter-spacing:.16em; text-transform:uppercase;
+  font-weight:700; color:var(--accent-ink);
+}
+
+/* ---------- gallery page ---------- */
+.gal-head-page{padding-block:clamp(30px,5vw,54px) clamp(26px,4vw,40px)}
+.back-btn{
+  display:inline-flex; align-items:center; gap:8px; margin-bottom:22px;
+  padding:9px 16px 9px 12px; border-radius:999px; border:1px solid var(--line-2);
+  font-size:13px; font-weight:700; color:var(--fg-2); background:var(--surface);
+  transition:all .24s var(--ease);
+}
+.back-btn:hover{border-color:var(--accent); color:var(--accent-ink); background:var(--accent-soft)}
+.back-btn svg{width:15px; height:15px}
+.gal-jump{
+  margin-top:20px; font-size:10.5px; letter-spacing:.17em; text-transform:uppercase;
+  font-weight:700; color:var(--fg-3); line-height:1.9;
+}
+.gal-jump span:not(:last-child)::after{content:"\00b7"; margin:0 .6em 0 .3em; color:var(--line-2)}
+
+.gal-grid{margin-top:30px; display:grid; gap:16px}
+.gal-grid.g-tall{grid-template-columns:repeat(auto-fill,minmax(186px,1fr))}
+.gal-grid.g-wide{grid-template-columns:repeat(auto-fill,minmax(304px,1fr))}
+.tile{
+  border:0; padding:0; background:none; cursor:pointer; text-align:left;
+  display:flex; flex-direction:column; min-width:0;
+  transition:transform .35s var(--ease);
+}
+.tile:hover{transform:translateY(-5px)}
+.tile-img{
+  position:relative; display:block; width:100%; border-radius:13px; overflow:hidden;
+  border:1px solid var(--line); box-shadow:var(--shadow); background:var(--bg-2);
+}
+.tile-img img{display:block; width:100%; height:100%; object-fit:cover; transition:transform .7s var(--ease)}
+.g-tall .tile-img{aspect-ratio:3/4}
+.g-wide .tile-img{aspect-ratio:16/10}
+.tile:hover .tile-img img{transform:scale(1.05)}
+.tile-img::after{
+  content:''; position:absolute; inset:0; opacity:0; transition:opacity .35s var(--ease);
+  background:linear-gradient(to top, rgba(58,46,40,.4) 0%, transparent 44%);
+}
+.tile:hover .tile-img::after{opacity:1}
+.tile-meta{margin-top:10px; display:flex; align-items:baseline; justify-content:space-between; gap:8px}
+.tile-name{font-family:var(--f-display); font-weight:600; font-size:17px; line-height:1.25; min-width:0}
+.tile-tag{
+  font-size:9px; letter-spacing:.15em; text-transform:uppercase; white-space:nowrap;
+  color:var(--fg-3); font-weight:700;
+}
+.gal-note{
+  margin-top:16px; font-size:13px; color:var(--fg-3); line-height:1.65; max-width:68ch;
+}
+.gal-cta{
+  margin-top:34px; padding:28px clamp(22px,4vw,36px); border-radius:18px;
+  background:var(--accent-soft); border:1px solid var(--line-2);
+  display:flex; flex-wrap:wrap; align-items:center; justify-content:space-between; gap:18px;
+}
+.gal-cta p{font-family:var(--f-display); font-weight:700; font-size:clamp(20px,2.6vw,26px); max-width:24ch}
+.gal-cta .row{display:flex; flex-wrap:wrap; gap:10px}
+
+/* ---------- lightbox ---------- */
+.lb{
+  position:fixed; inset:0; z-index:90; display:none;
+  align-items:center; justify-content:center; padding:clamp(14px,3vw,38px);
+  background:rgba(18,14,24,.9); backdrop-filter:blur(7px);
+}
+.lb.on{display:flex}
+.lb img{max-width:100%; max-height:84vh; border-radius:9px; box-shadow:0 30px 80px rgba(0,0,0,.6); object-fit:contain}
+.lb-close{
+  position:absolute; top:calc(16px + env(safe-area-inset-top,0px)); right:16px;
+  width:42px; height:42px; border-radius:50%; background:rgba(255,255,255,.12);
+  color:#fff; display:grid; place-items:center; backdrop-filter:blur(6px);
+}
+.lb-close:hover{background:rgba(255,255,255,.22)}
+.lb-cap{
+  position:absolute; bottom:calc(18px + env(safe-area-inset-bottom,0px)); left:0; right:0;
+  text-align:center; color:rgba(255,255,255,.8); font-size:13px; letter-spacing:.04em;
+}
+
+/* ---------- reveal ----------
+   Elements are visible by default. Script arms only the ones that start below
+   the fold, so the first painted frame is always complete. */
+.rv{transition:opacity .8s var(--ease), transform .8s var(--ease)}
+.rv[data-armed]{opacity:0; transform:translateY(22px)}
+.rv[data-armed].in{opacity:1; transform:none}
+@media (prefers-reduced-motion:reduce){
+  .rv[data-armed]{opacity:1; transform:none; transition:none}
+}
+
+/* ---------- responsive ---------- */
+@media (max-width:1000px){
+  .hero-grid{grid-template-columns:1fr; gap:40px}
+  .board{max-width:340px; margin-inline:auto; justify-self:center}
+  .foryou, .contact-grid, .addons{grid-template-columns:1fr}
+  .tiers{grid-template-columns:repeat(2,1fr)}
+}
+@media (max-width:980px){
+  :root{--rail:0px}
+  .rail{
+    transform:translateX(-100%); width:252px;
+    transition:transform .38s var(--ease); box-shadow:none;
+  }
+  .rail.open{transform:none; box-shadow:var(--shadow-lg)}
+  .shell{margin-left:0; padding-top:88px}
+  .topbar{
+    display:flex; align-items:center; justify-content:space-between; gap:14px;
+    position:fixed; top:0; left:0; right:0; z-index:58; height:calc(88px + env(safe-area-inset-top,0px));
+    padding:0 16px; padding-top:env(safe-area-inset-top,0px);
+    background:var(--bg);
+    background:color-mix(in srgb, var(--bg) 88%, transparent);
+    backdrop-filter:blur(14px); border-bottom:1px solid var(--line);
+  }
+  .topbar .m{font-family:var(--f-script); font-size:33px; line-height:1; text-decoration:none; color:var(--fg)}
+  .chibi-stage-rail{display:none}
+  .chibi-stage-bar{
+    display:block; position:absolute; left:50%; transform:translateX(-50%);
+    top:calc(env(safe-area-inset-top,0px) + 4px); padding:0; z-index:2;
+  }
+  .chibi-stage-bar .chibi{width:116px}
+  /* on the bar she sits centred, so the hello goes to her right, clear of the wordmark */
+  .chibi-stage-bar .chibi-bubble{
+    font-size:16px; padding:5px 10px; top:15px; left:auto; right:-48px;
+    border-radius:11px 11px 11px 3px;
+  }
+  .chibi-stage-bar .chibi-bubble::before{right:auto; left:9px; border-width:6px; border-bottom:0}
+  .chibi-stage-bar .chibi-bubble::after{right:auto; left:10px; border-width:5px; border-bottom:0; bottom:-5px}
+  .chibi-stage-bar .cstar{width:14px}
+  .chibi-stage-bar .cstar.c1{width:18px}
+  .burger{width:40px; height:40px; display:grid; place-items:center; border-radius:9px; color:var(--fg)}
+  .burger:hover{background:var(--bg-2)}
+  .burger svg{width:21px; height:21px}
+  .story{grid-template-columns:1fr}
+  .story-line{display:none}
+}
+/* very narrow phones: shrink her so the wordmark and menu stay clear */
+@media (max-width:370px){
+  .topbar{height:calc(80px + env(safe-area-inset-top,0px))}
+  .shell{padding-top:80px}
+  .topbar .m{font-size:27px}
+  .chibi-stage-bar .chibi{width:92px}
+  .chibi-stage-bar .chibi-bubble{font-size:14px; padding:4px 8px; right:-40px; top:12px}
+}
+@media (max-width:560px){
+  body{font-size:15.5px}
+  .tiers{grid-template-columns:1fr}
+  .step{grid-template-columns:1fr; gap:4px}
+  .step-n{font-size:24px}
+  .board{max-width:292px; padding:26px 6px 38px}
+  .note{font-size:15.5px}
+  .note-a{top:-14px; left:-8px}
+  .note-b{bottom:0; left:-2px}
+  .scribble.sc-b{left:96px; bottom:28px; width:36px}
+  .board-cap{font-size:30px}
+  .social{width:100%}
+  .hero-cta .btn{flex:1 1 100%; justify-content:center}
+}
+</style>
+
+<svg width="0" height="0" style="position:absolute" aria-hidden="true"><defs>
+<symbol id="i-spark" viewBox="0 0 24 24"><path d="M12 0c.6 6.3 5.1 11 11.3 12-6.2 1-10.7 5.7-11.3 12-.6-6.3-5.1-11-11.3-12C7 11 11.4 6.3 12 0z" fill="currentColor"/></symbol>
+<symbol id="i-star" viewBox="0 0 24 24"><path d="M12 1.6l3.1 6.6 7 1-5 5 1.2 7.2L12 18l-6.3 3.4L6.9 14.2l-5-5 7-1z" fill="currentColor"/></symbol>
+<symbol id="i-arrowr" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></symbol>
+<symbol id="i-arrowl" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 12H5M11 18l-6-6 6-6"/></symbol>
+<symbol id="i-check" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"/></symbol>
+<symbol id="i-mail" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="4" width="20" height="16" rx="2.5"/><path d="M2.5 6.5l9.5 7 9.5-7"/></symbol>
+<symbol id="i-copy" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="12" height="12" rx="2.4"/><path d="M5.5 15H4a1.8 1.8 0 01-1.8-1.8V4.8A1.8 1.8 0 014 3h8.4A1.8 1.8 0 0114 4.8V6"/></symbol>
+<symbol id="i-ig" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="2.5" y="2.5" width="19" height="19" rx="5.4"/><circle cx="12" cy="12" r="4.4"/><circle cx="17.7" cy="6.3" r="1.2" fill="currentColor" stroke="none"/></symbol>
+<symbol id="i-x" viewBox="0 0 24 24"><path d="M17.5 3h3.1l-6.8 7.8L21.8 21h-6.2l-4.9-6.4L5.1 21H2l7.3-8.3L2.4 3h6.3l4.4 5.8zm-1.1 16.1h1.7L7.7 4.8H5.9z" fill="currentColor"/></symbol>
+<symbol id="i-da" viewBox="0 0 24 24"><path d="M18.4 2v5.2l-3.3 6.3h3.3v4.6h-5.7L10 23H5.6v-5.2l3.4-6.3H5.6V6.9h5.7L13.9 2z" fill="currentColor"/></symbol>
+<symbol id="i-palette" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M12 21a9 9 0 110-18c4.97 0 9 3.58 9 8 0 2.21-1.79 4-4 4h-1.8a1.7 1.7 0 00-1.2 2.9c.3.3.5.7.5 1.2 0 1.05-.9 1.9-2.5 1.9z"/><circle cx="7.4" cy="11.6" r="1.1" fill="currentColor" stroke="none"/><circle cx="10.4" cy="7.4" r="1.1" fill="currentColor" stroke="none"/><circle cx="15.3" cy="8.1" r="1.1" fill="currentColor" stroke="none"/></symbol>
+<symbol id="i-menu" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round"><path d="M3.5 7h17M3.5 12h17M3.5 17h17"/></symbol>
+<symbol id="i-close" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round"><path d="M6 6l12 12M18 6L6 18"/></symbol>
+<symbol id="i-plus" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></symbol>
+<symbol id="i-arrow1" viewBox="0 0 64 52" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M4 7c18-3 38 8 49 33"/><path d="M53 40l-12-3M53 40l1-12"/></symbol>
+<symbol id="i-arrow2" viewBox="0 0 64 52" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M60 45c-17 3-37-8-48-32"/><path d="M11 14l12 3M11 14l-1 12"/></symbol>
+<symbol id="i-brief" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="2.5" y="6.5" width="19" height="14" rx="2.4"/><path d="M8.5 6.5V4.8A1.8 1.8 0 0110.3 3h3.4a1.8 1.8 0 011.8 1.8v1.7"/></symbol>
+</defs></svg>
+
+<header class="topbar">
+  <a href="#top" class="m">nyxika</a>
+  <div class="chibi-stage chibi-stage-bar">
+    <span class="chibi-bubble" data-i="chibiHi">hi!</span>
+    <button class="chibi-btn" data-chibi aria-label="Say hi to nyxika" data-i-aria="chibiAria">
+      <span class="chibi-glow"></span>
+      <span class="chibi-float"><img class="chibi" src="img/chibi.png" alt="nyxika's chibi self-portrait" width="250" height="251"></span>
+      <svg class="cstar c1"><use href="#i-spark"/></svg>
+      <svg class="cstar c2"><use href="#i-spark"/></svg>
+      <svg class="cstar c3"><use href="#i-spark"/></svg>
+      <svg class="cstar c4"><use href="#i-spark"/></svg>
+      <svg class="cstar c5"><use href="#i-spark"/></svg>
+      <svg class="cstar c6"><use href="#i-spark"/></svg>
+    </button>
+  </div>
+  <button class="burger" id="burger" aria-label="Menu" aria-expanded="false"><svg><use href="#i-menu"/></svg></button>
+</header>
+
+<div class="scrim" id="scrim"></div>
+
+<aside class="rail" id="rail">
+  <div class="chibi-stage chibi-stage-rail">
+    <span class="chibi-bubble" data-i="chibiHi">hi!</span>
+    <button class="chibi-btn" data-chibi aria-label="Say hi to nyxika" data-i-aria="chibiAria">
+      <span class="chibi-glow"></span>
+      <span class="chibi-float"><img class="chibi" src="img/chibi.png" alt="nyxika's chibi self-portrait" width="250" height="251"></span>
+      <svg class="cstar c1"><use href="#i-spark"/></svg>
+      <svg class="cstar c2"><use href="#i-spark"/></svg>
+      <svg class="cstar c3"><use href="#i-spark"/></svg>
+      <svg class="cstar c4"><use href="#i-spark"/></svg>
+      <svg class="cstar c5"><use href="#i-spark"/></svg>
+      <svg class="cstar c6"><use href="#i-spark"/></svg>
+    </button>
+  </div>
+  <a href="#top" class="brand">
+    <span class="mark">nyxika</span>
+    <span class="sub" data-i="brandSub">Character artist</span>
+  </a>
+  <nav id="nav">
+    <a href="#about"><span class="dot"></span><span data-i="navAbout">About me</span></a>
+    <a href="#works"><span class="dot"></span><span data-i="navWorks">My works</span></a>
+    <a href="#gallery"><span class="dot"></span><span data-i="navAll">All works</span></a>
+    <a href="#process"><span class="dot"></span><span data-i="navProcess">How I work</span></a>
+    <a href="#pricing"><span class="dot"></span><span data-i="navPricing">Pricing</span></a>
+    <a href="#faq"><span class="dot"></span><span data-i="navFaq">FAQ</span></a>
+    <a href="#contact"><span class="dot"></span><span data-i="navContact">Contacts</span></a>
+  </nav>
+  <div class="lang">
+    <div class="lang-h" data-i="langH">Language</div>
+    <div class="lang-list" id="langList">
+      <button data-l="en">English</button>
+      <button data-l="es">Español</button>
+      <button data-l="fr">Français</button>
+      <button data-l="de">Deutsch</button>
+      <button data-l="uk">Українська</button>
+    </div>
+  </div>
+</aside>
+
+<div class="shell" id="top" data-page="home">
+
+<!-- HERO -->
+<section class="hero">
+  <div class="wrap hero-grid">
+    <div>
+      <div class="hero-kicker" data-i="heroKicker">Adoptables · OCs · Commissions</div>
+      <h1 class="shimmer"><span data-i="heroH1a">Hey, I'm Nika. I draw characters you'll get</span> <em data-i="heroH1b">way too attached to.</em></h1>
+      <p class="hero-sub" data-i="heroSub">Dark fantasy, fox spirits, witches and demon girls — basically whatever's been living in your head rent-free. Adopt one that's already waiting, or we build yours from scratch.</p>
+      <div class="hero-cta">
+        <a class="btn btn-1" href="#works"><span data-i="heroCta1">See the characters</span><svg><use href="#i-arrowr"/></svg></a>
+        <a class="btn btn-2" href="#pricing"><span data-i="heroCta2">Commission me</span></a>
+      </div>
+      <div class="trust">
+        <span><svg><use href="#i-check"/></svg><span data-i="trust1">Full ownership</span></span>
+        <span><svg><use href="#i-check"/></svg><span data-i="trust2">No watermark, full resolution</span></span>
+        <span><svg><use href="#i-check"/></svg><span data-i="trust3">Sketch approval before I render</span></span>
+      </div>
+    </div>
+    <div class="board">
+      <span class="note note-a" data-i="noteA">hi, that's me</span>
+      <svg class="scribble sc-a" viewBox="0 0 64 52"><use href="#i-arrow1"/></svg>
+      <svg class="spark a"><use href="#i-spark"/></svg>
+      <svg class="spark b"><use href="#i-spark"/></svg>
+      <svg class="spark c"><use href="#i-spark"/></svg>
+      <div class="board-pin">
+        <span class="tape tape-a"></span>
+        <span class="tape tape-b"></span>
+        <img class="board-photo" src="img/nika-v2.jpg" alt="Nika, the artist behind nyxika" width="880" height="1100">
+        <span class="board-cap">nyxika</span>
+      </div>
+      <svg class="scribble sc-b" viewBox="0 0 64 52"><use href="#i-arrow2"/></svg>
+      <span class="note note-b" data-i="noteB">every character starts here</span>
+      <img class="sticker s5" src="img/st-ghost.png" alt="" aria-hidden="true" loading="lazy">
+    </div>
+  </div>
+</section>
+
+<!-- ABOUT -->
+<section class="sec tint" id="about">
+  <div class="wrap">
+    <div class="story">
+      <div class="story-line" aria-hidden="true"></div>
+      <div class="story-body">
+        <div class="eyebrow"><svg><use href="#i-spark"/></svg><span data-i="aboutLabel">About me</span></div>
+        <h2 class="t" data-i="aboutTitle">I spent a long time searching for what truly felt like me</h2>
+        <p class="lead rv" data-i="st1">When I was a child, my parents enrolled me in art school because I drew everywhere — on the walls, furniture, and in my notebooks. I created my own manga, made little notebooks for it, and could spend hours drawing characters.</p>
+        <p class="rv" data-i="st2">Then I grew up, and the inevitable question came: "What am I going to do with my life?"</p>
+        <p class="rv" data-i="st3">I tried programming, photography, and even enrolled in an art university. But then the war began, I had to move, and everything changed again.</p>
+        <p class="rv" data-i="st4">After that came nail art, epoxy resin, and eventually almost five years of web design. I worked with people and teams, creating real projects — but somewhere inside, I still felt that it wasn't quite me.</p>
+        <p class="rv" data-i="st5">And one day, I simply started drawing characters again. Not for work. Not because I had to. Just because I wanted to.</p>
+        <p class="rv" data-i="st6">That's when I realized: no matter how many different paths I tried, I always found my way back to drawing.</p>
+        <p class="rv" data-i="st7">Now I finally allow myself to do what I truly love — creating characters, giving them stories, and putting a little piece of myself into each one.</p>
+        <p class="last rv" data-i="st8">Sometimes you have to take a very long journey to finally find your way back to yourself.</p>
+        <div class="story-photo rv"><img src="img/nika2-v2.jpg" alt="Nika at her desk" width="800" height="800" loading="lazy"></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- WORKS -->
+<section class="sec" id="works">
+  <div class="wrap">
+    <img class="sticker s7" src="img/st-web.png" alt="" aria-hidden="true" loading="lazy">
+    <img class="sticker s6" src="img/st-pumpkin.png" alt="" aria-hidden="true" loading="lazy">
+    <div class="gal-head">
+      <div>
+        <div class="eyebrow"><svg><use href="#i-spark"/></svg><span data-i="worksLabel">My works</span></div>
+        <h2 class="t" data-i="worksTitle">Characters looking for someone</h2>
+        <p class="lede" data-i="worksLede">Each one started as a feeling and ended up as somebody. Open any card to see the full reference sheet.</p>
+      </div>
+      <div class="arrows">
+        <button id="prev" aria-label="Previous"><svg><use href="#i-arrowl"/></svg></button>
+        <button id="next" aria-label="Next"><svg><use href="#i-arrowr"/></svg></button>
+      </div>
+    </div>
+
+    <div class="track-outer rv">
+      <div class="track" id="track"></div>
+      <p class="hint" data-i="worksHint">Scroll sideways to see them all · click a card for the full sheet</p>
+    </div>
+
+    <div class="socials rv">
+      <div class="socials-h" data-i="findMe">Find me here</div>
+      <div class="social-row">
+        <a class="social" href="https://instagram.com/_nyxika_" target="_blank" rel="noopener"><svg><use href="#i-ig"/></svg><span>Instagram<br><span class="h">@_nyxika_</span></span></a>
+        <a class="social" href="https://www.deviantart.com/nyxikaaa" target="_blank" rel="noopener"><svg><use href="#i-da"/></svg><span>DeviantArt<br><span class="h">nyxikaaa</span></span></a>
+        <a class="social" href="https://portfolio.commishes.com/user/nyxika/" target="_blank" rel="noopener"><svg><use href="#i-palette"/></svg><span>Commishes<br><span class="h">portfolio</span></span></a>
+        <a class="social" href="https://x.com/_Nyxika_" target="_blank" rel="noopener"><svg><use href="#i-x"/></svg><span>Twitter / X<br><span class="h">@_Nyxika_</span></span></a>
+        <a class="social" href="#contact"><svg><use href="#i-mail"/></svg><span data-i="emailWord">Email<br><span class="h">rizhachika@gmail.com</span></span></a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FOR YOU -->
+<section class="sec tint">
+  <div class="wrap foryou">
+    <div>
+      <div class="eyebrow"><svg><use href="#i-spark"/></svg><span data-i="fyLabel">Why it keeps getting better</span></div>
+      <h2 class="t" data-i="fyTitle">I design these for you, not at you</h2>
+    </div>
+    <div class="foryou-body">
+      <p class="rv" data-i="fy1">Nothing I draw is random. Before a new character exists, I go back through what you saved, what you bid on, and which messages said "oh my god, she's perfect." That's my brief.</p>
+      <p class="rv" data-i="fy2">So every drop lands a little closer than the last one — the palettes you reach for, the archetypes you keep coming back to, the small details you notice and take the time to tell me about.</p>
+      <p class="rv" data-i="fy3">I know that isn't how most artists work. But you are the reason this is my job now, and I would rather make the thing you actually wanted than the thing I assumed you did.</p>
+      <div class="heart rv" data-i="fyHeart">I love you all, and I just want to keep making more for you.</div>
+    </div>
+  </div>
+</section>
+
+<!-- PROCESS + REVIEWS -->
+<section class="sec" id="process">
+  <div class="wrap">
+    <img class="sticker s5" src="img/st-ghost-hat.png" alt="" aria-hidden="true" loading="lazy">
+    <img class="sticker s6" src="img/st-ghost.png" alt="" aria-hidden="true" loading="lazy">
+    <div class="eyebrow"><svg><use href="#i-star"/></svg><span data-i="revLabel">What buyers say</span></div>
+    <div class="rev-track" id="revTrack"></div>
+
+    <div style="margin-top:clamp(50px,7vw,80px)">
+      <div class="eyebrow"><svg><use href="#i-spark"/></svg><span data-i="procLabel">How I work</span></div>
+      <h2 class="t" data-i="procTitle">From "I have an idea" to "she's mine"</h2>
+      <p class="lede" data-i="procLede">The same five steps every time, so you always know where your character is and what happens next.</p>
+      <div class="steps" id="steps"></div>
+    </div>
+  </div>
+</section>
+
+<!-- PRICING -->
+<section class="sec tint" id="pricing">
+  <div class="wrap price-wrap">
+    <img class="sticker s1" src="img/st-ghost-hat.png" alt="" aria-hidden="true" loading="lazy">
+    <img class="sticker s2" src="img/st-web.png" alt="" aria-hidden="true" loading="lazy">
+    <img class="sticker s3" src="img/st-ghost.png" alt="" aria-hidden="true" loading="lazy">
+    <img class="sticker s4" src="img/st-pumpkin.png" alt="" aria-hidden="true" loading="lazy">
+
+    <div class="eyebrow"><svg><use href="#i-palette"/></svg><span data-i="priceLabel">Pricing</span></div>
+    <h2 class="t" data-i="priceTitle">Character art commissions</h2>
+    <p class="lede" data-i="priceLede">Starting points rather than final numbers — complexity and detail move them. Every commission is a little different, so we settle the exact price together before anything begins.</p>
+
+    <div class="tiers rv" id="tiers"></div>
+
+    <div class="addons rv">
+      <div class="panel">
+        <div class="panel-h"><svg><use href="#i-plus"/></svg><span data-i="addonsH">Add-ons</span></div>
+        <div class="addon-list" id="addons"></div>
+      </div>
+      <div class="panel comm">
+        <div class="panel-h"><svg><use href="#i-brief"/></svg><span data-i="commH">Commercial use</span></div>
+        <div class="big" id="commBig">+50%</div>
+        <p data-i="commP">Of the artwork price. Covers merchandise, advertising, branding, monetized content and other business purposes.</p>
+      </div>
+    </div>
+
+    <p class="fineprint" data-i="priceFine">Prices are starting points and may vary depending on the complexity and amount of detail. Every commission is unique, so the final price is discussed individually.</p>
+
+    <div class="price-cta">
+      <a class="btn btn-1" href="#contact"><span data-i="priceCta">Have a custom idea? Message me</span><svg><use href="#i-arrowr"/></svg></a>
+      <span style="font-size:13px;color:var(--fg-3)" data-i="priceCtaNote">I answer everything myself, usually within a day.</span>
+    </div>
+  </div>
+</section>
+
+<!-- FAQ -->
+<section class="sec" id="faq">
+  <div class="wrap">
+    <img class="sticker s7" src="img/st-pumpkin.png" alt="" aria-hidden="true" loading="lazy">
+    <img class="sticker s6" src="img/st-web.png" alt="" aria-hidden="true" loading="lazy">
+    <div class="eyebrow"><svg><use href="#i-spark"/></svg><span data-i="faqLabel">FAQ</span></div>
+    <h2 class="t" data-i="faqTitle">Things people ask me</h2>
+    <div class="faq" id="faqList"></div>
+  </div>
+</section>
+
+<!-- CONTACT -->
+<section class="sec tint" id="contact">
+  <div class="wrap">
+    <img class="sticker s5" src="img/st-ghost.png" alt="" aria-hidden="true" loading="lazy">
+    <div class="eyebrow"><svg><use href="#i-mail"/></svg><span data-i="contactLabel">Contacts</span></div>
+    <h2 class="t" data-i="contactTitle">Come say hi</h2>
+    <div class="contact-grid">
+      <div>
+        <p class="lede" style="margin-top:0" data-i="contactLede">I answer everything myself, usually within a day. If you are not sure what you want yet, that is completely fine — message me anyway and we will figure it out together.</p>
+        <div class="social-row" style="margin-top:26px">
+          <a class="social" href="https://instagram.com/_nyxika_" target="_blank" rel="noopener"><svg><use href="#i-ig"/></svg><span>Instagram<br><span class="h">@_nyxika_</span></span></a>
+          <a class="social" href="https://www.deviantart.com/nyxikaaa" target="_blank" rel="noopener"><svg><use href="#i-da"/></svg><span>DeviantArt<br><span class="h">nyxikaaa</span></span></a>
+          <a class="social" href="https://portfolio.commishes.com/user/nyxika/" target="_blank" rel="noopener"><svg><use href="#i-palette"/></svg><span>Commishes<br><span class="h">portfolio</span></span></a>
+          <a class="social" href="https://x.com/_Nyxika_" target="_blank" rel="noopener"><svg><use href="#i-x"/></svg><span>Twitter / X<br><span class="h">@_Nyxika_</span></span></a>
+        </div>
+      </div>
+      <div class="mailbox">
+        <div class="mail-l" data-i="mailL">Email · the fastest way</div>
+        <div class="mail-v" id="mailV">rizhachika@gmail.com</div>
+        <button class="copy" id="copyBtn"><svg><use href="#i-copy"/></svg><span id="copyTxt" data-i="copy">Copy address</span></button>
+        <p style="margin-top:18px;font-size:13px;color:var(--fg-3);line-height:1.7" data-i="payNote">Payments go through PayPal in USD. Files are delivered to your email at full resolution, without a watermark.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap">
+    <div class="foot-top">
+      <div>
+        <div class="foot-mark">nyxika</div>
+        <div style="font-size:12.5px;color:var(--fg-3);margin-top:4px" data-i="brandSub2">Character artist</div>
+      </div>
+      <div class="foot-links">
+        <a href="https://instagram.com/_nyxika_" target="_blank" rel="noopener">Instagram</a>
+        <a href="https://www.deviantart.com/nyxikaaa" target="_blank" rel="noopener">DeviantArt</a>
+        <a href="https://portfolio.commishes.com/user/nyxika/" target="_blank" rel="noopener">Commishes</a>
+        <a href="https://x.com/_Nyxika_" target="_blank" rel="noopener">Twitter / X</a>
+      </div>
+    </div>
+    <div class="legal">
+      <p><strong>© 2026 nyxika. <span data-i="legal0">All rights reserved.</span></strong></p>
+      <p data-i="legal1">Every character design, illustration and piece of artwork on this site is my own original work and my intellectual property, protected by copyright. Copying, reposting, editing, reselling, or using any of it to train AI models — in whole or in part, with or without changes — is not permitted without my written consent.</p>
+      <p data-i="legal2">Unauthorised use is an infringement of my rights and I do act on it, including takedown requests to the host and platform and, where it is warranted, further legal action.</p>
+      <p data-i="legal3">Buying a character or a commission gives you the usage rights described on this page. It does not transfer the copyright in the artwork itself.</p>
+    </div>
+  </div>
+</footer>
+</div>
+
+
+<div class="shell" id="galleryPage" hidden>
+  <section class="sec gal-head-page">
+    <div class="wrap">
+      <button class="back-btn" data-back><svg><use href="#i-arrowl"/></svg><span data-i="backHome">Back to the site</span></button>
+      <div class="eyebrow"><svg><use href="#i-spark"/></svg><span data-i="galLabel">Full portfolio</span></div>
+      <h2 class="t" data-i="galTitle">Everything I have drawn</h2>
+      <p class="lede" data-i="galLede">Characters first, then the backgrounds I paint for them, then half-body work. Click any piece to see it full size.</p>
+      <p class="gal-jump"><span data-i="jumpChars">Characters</span><span data-i="jumpBgs">Backgrounds</span><span data-i="jumpHalf">Half body</span></p>
+    </div>
+  </section>
+
+  <section class="sec" id="gc">
+    <div class="wrap">
+      <img class="sticker s5" src="img/st-ghost-hat.png" alt="" aria-hidden="true" loading="lazy">
+      <div class="eyebrow"><svg><use href="#i-spark"/></svg><span data-i="galCharsLabel">Characters</span></div>
+      <h2 class="t" data-i="galCharsTitle">Original characters and adopts</h2>
+      <p class="gal-note" data-i="galCharsNote">Every one of these is my own design. The ones already adopted belong to their owners now.</p>
+      <div class="gal-grid g-tall" id="gridChars"></div>
+    </div>
+  </section>
+
+  <section class="sec tint" id="gb">
+    <div class="wrap">
+      <img class="sticker s6" src="img/st-web.png" alt="" aria-hidden="true" loading="lazy">
+      <div class="eyebrow"><svg><use href="#i-palette"/></svg><span data-i="galBgLabel">Backgrounds</span></div>
+      <h2 class="t" data-i="galBgTitle">Backgrounds I paint for characters</h2>
+      <p class="gal-note" data-i="galBgNote">A character reads differently once they have somewhere to stand. I build the room first, then light it — the same study below is painted three times for morning, dusk and night, so a character can live in it at any hour.</p>
+      <div class="gal-grid g-wide" id="gridBgs"></div>
+    </div>
+  </section>
+
+  <section class="sec" id="gh">
+    <div class="wrap">
+      <img class="sticker s7" src="img/st-pumpkin.png" alt="" aria-hidden="true" loading="lazy">
+      <div class="eyebrow"><svg><use href="#i-spark"/></svg><span data-i="galHalfLabel">Half body</span></div>
+      <h2 class="t" data-i="galHalfTitle">Busts and half-body pieces</h2>
+      <p class="gal-note" data-i="galHalfNote">Closer in, where the face and the fabric do the work. These are commissions drawn from my clients' own characters.</p>
+      <div class="gal-grid g-tall" id="gridHalf"></div>
+
+      <div class="gal-cta">
+        <p data-i="galCtaTitle">Want something like this for your own character?</p>
+        <div class="row">
+          <a class="btn btn-1" href="#pricing" data-back-to="pricing"><span data-i="galCtaPrice">See prices</span><svg><use href="#i-arrowr"/></svg></a>
+          <a class="btn btn-2" href="https://www.deviantart.com/nyxikaaa" target="_blank" rel="noopener">DeviantArt</a>
+          <a class="btn btn-2" href="https://ig.me/m/_nyxika_" target="_blank" rel="noopener"><span data-i="writeMe">Message me</span></a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <footer>
+    <div class="wrap">
+      <div class="foot-top">
+        <div><div class="foot-mark">nyxika</div>
+        <div style="font-size:12.5px;color:var(--fg-3);margin-top:4px" data-i="brandSub2">Character artist</div></div>
+        <div class="foot-links">
+          <a href="https://instagram.com/_nyxika_" target="_blank" rel="noopener">Instagram</a>
+          <a href="https://www.deviantart.com/nyxikaaa" target="_blank" rel="noopener">DeviantArt</a>
+          <a href="https://portfolio.commishes.com/user/nyxika/" target="_blank" rel="noopener">Commishes</a>
+          <a href="https://x.com/_Nyxika_" target="_blank" rel="noopener">Twitter / X</a>
+        </div>
+      </div>
+      <div class="legal"><p data-i="legal1">...</p></div>
+    </div>
+  </footer>
+</div>
+
+<div class="lb" id="lb">
+  <button class="lb-close" id="lbClose" aria-label="Close"><svg style="width:20px;height:20px"><use href="#i-close"/></svg></button>
+  <img id="lbImg" alt="">
+  <div class="lb-cap" id="lbCap"></div>
+</div>
+
+<script>
+(function(){
+"use strict";
+
+/* ---------------- data ---------------- */
+/* Content lives in data/*.json so the CMS can edit it.
+   These copies are the fallback when the page is opened straight from disk. */
+var DATA = {
+ works: {
+ "characters": [
+  {
+   "id": "lantern",
+   "name": "Tomoshibi",
+   "tag": "Lantern spirit",
+   "tag_uk": "Дух ліхтаря",
+   "card": "img/card-lantern.jpg",
+   "full": "img/full-lantern.jpg",
+   "featured": true
+  },
+  {
+   "id": "eliza",
+   "name": "Eliza",
+   "tag": "Frost witch",
+   "tag_uk": "Крижана відьма",
+   "card": "img/card-eliza.jpg",
+   "full": "img/full-eliza.jpg",
+   "featured": true
+  },
+  {
+   "id": "vampire",
+   "name": "Carmine",
+   "tag": "Vampire",
+   "tag_uk": "Вампірка",
+   "card": "img/card-vampire.jpg",
+   "full": "img/full-vampire.jpg",
+   "featured": true
+  },
+  {
+   "id": "greenwitch",
+   "name": "Wisp",
+   "tag": "Witch",
+   "tag_uk": "Відьма",
+   "card": "img/card-greenwitch.jpg",
+   "full": "img/full-greenwitch.jpg",
+   "featured": false
+  },
+  {
+   "id": "bunnymaid",
+   "name": "Porcelain",
+   "tag": "Bunny maid",
+   "tag_uk": "Зайчиха-покоївка",
+   "card": "img/card-bunnymaid.jpg",
+   "full": "img/full-bunnymaid.jpg",
+   "featured": false
+  },
+  {
+   "id": "kitsune",
+   "name": "Vesper",
+   "tag": "Kitsune",
+   "tag_uk": "Кіцуне",
+   "card": "img/card-kitsune.jpg",
+   "full": "img/full-kitsune.jpg",
+   "featured": false
+  },
+  {
+   "id": "verdigris",
+   "name": "Verdigris",
+   "tag": "Dragonkin",
+   "tag_uk": "Драконіда",
+   "card": "img/card-verdigris.jpg",
+   "full": "img/full-verdigris.jpg",
+   "featured": false
+  },
+  {
+   "id": "ember",
+   "name": "Ember",
+   "tag": "Demon",
+   "tag_uk": "Демониця",
+   "card": "img/card-ember.jpg",
+   "full": "img/full-ember.jpg",
+   "featured": false
+  },
+  {
+   "id": "biker",
+   "name": "Static",
+   "tag": "Wolf · Rider",
+   "tag_uk": "Вовчиця · Байкерка",
+   "card": "img/card-biker.jpg",
+   "full": "img/full-biker.jpg",
+   "featured": false
+  }
+ ],
+ "backgrounds": [
+  {
+   "id": "bg-night",
+   "name": "Witch's study",
+   "name_uk": "Кабінет відьми",
+   "tag": "Night",
+   "tag_uk": "Ніч",
+   "card": "img/card-bg-night.jpg",
+   "full": "img/full-bg-night.jpg"
+  },
+  {
+   "id": "bg-dusk",
+   "name": "Witch's study",
+   "name_uk": "Кабінет відьми",
+   "tag": "Dusk",
+   "tag_uk": "Сутінки",
+   "card": "img/card-bg-dusk.jpg",
+   "full": "img/full-bg-dusk.jpg"
+  },
+  {
+   "id": "bg-day",
+   "name": "Witch's study",
+   "name_uk": "Кабінет відьми",
+   "tag": "Day",
+   "tag_uk": "День",
+   "card": "img/card-bg-day.jpg",
+   "full": "img/full-bg-day.jpg"
+  },
+  {
+   "id": "bg-ship",
+   "name": "Ship bridge",
+   "name_uk": "Місток корабля",
+   "tag": "Sci-fi interior",
+   "tag_uk": "Sci-fi інтер'єр",
+   "card": "img/card-bg-ship.jpg",
+   "full": "img/full-bg-ship.jpg"
+  }
+ ],
+ "halfbody": [
+  {
+   "id": "hb-spider",
+   "name": "Spider spirit",
+   "name_uk": "Павучий дух",
+   "tag": "Bust",
+   "tag_uk": "Бюст",
+   "card": "img/card-hb-spider.jpg",
+   "full": "img/full-hb-spider.jpg"
+  },
+  {
+   "id": "hb-corridor",
+   "name": "Night corridor",
+   "name_uk": "Нічний коридор",
+   "tag": "Half body",
+   "tag_uk": "Half body",
+   "card": "img/card-hb-corridor.jpg",
+   "full": "img/full-hb-corridor.jpg"
+  }
+ ]
+},
+ pricing: {
+ "tiers": [
+  {
+   "key": "sketch",
+   "featured": false,
+   "bust": 20,
+   "half": 25,
+   "full": 35
+  },
+  {
+   "key": "lineart",
+   "featured": false,
+   "bust": 30,
+   "half": 40,
+   "full": 55
+  },
+  {
+   "key": "flat",
+   "featured": false,
+   "bust": 40,
+   "half": 50,
+   "full": 65
+  },
+  {
+   "key": "render",
+   "featured": true,
+   "bust": 50,
+   "half": 65,
+   "full": 85
+  }
+ ],
+ "addons": [
+  {
+   "label": "Alternative outfit",
+   "label_uk": "Альтернативний аутфіт",
+   "price": "+$30"
+  },
+  {
+   "label": "Chibi version",
+   "label_uk": "Чібі-версія",
+   "price": "+$20"
+  },
+  {
+   "label": "Spirit / beast form",
+   "label_uk": "Духовна / звіряча форма",
+   "price": "+$40"
+  },
+  {
+   "label": "Additional character",
+   "label_uk": "Додатковий персонаж",
+   "price": "+50%"
+  },
+  {
+   "label": "2 additional expressions",
+   "label_uk": "2 додаткові емоції",
+   "price": "+$20"
+  },
+  {
+   "label": "Back view",
+   "label_uk": "Вид зі спини",
+   "price": "+$30"
+  },
+  {
+   "label": "Additional pose / version",
+   "label_uk": "Додаткова поза / версія",
+   "price": "+$25"
+  },
+  {
+   "label": "Complex POV / foreshortening",
+   "label_uk": "Складний ракурс / перспектива",
+   "price": "+$10–40"
+  },
+  {
+   "label": "Detailed background",
+   "label_uk": "Опрацьований фон",
+   "price": "from $30"
+  },
+  {
+   "label": "NSFW unlock",
+   "label_uk": "NSFW-версія",
+   "price": "+$55"
+  }
+ ],
+ "commercial": "+50%"
+},
+ reviews: {
+ "items": [
+  {
+   "quote": "Got it! She looks lovely! Thank you again!",
+   "name": "disknight"
+  },
+  {
+   "quote": "I saw it and it looks good. Hopefully some day in the future there's another OC I'll adopt from you.",
+   "name": "4KOT4K"
+  },
+  {
+   "quote": "I got it! Thanks! Good luck with your future auctions!",
+   "name": "rogan"
+  },
+  {
+   "quote": "Received. Thank you! And I'll drop you a follow as well. Thanks again!",
+   "name": "ClearNote38"
+  },
+  {
+   "quote": "I've got it! Tysm!",
+   "name": "abruptragnarok"
+  },
+  {
+   "quote": "fox girl received, thank you for your time",
+   "name": "hyton"
+  }
+ ]
+}
+};
+
+function lab(it, base){ return (lang === "uk" && it[base + "_uk"]) ? it[base + "_uk"] : (it[base] || ""); }
+function allWorks(){ return DATA.works.characters.concat(DATA.works.backgrounds, DATA.works.halfbody) }
+
+function FULL_SRC(id){
+  var a = allWorks();
+  for (var i=0;i<a.length;i++) if (a[i].id === id) return a[i].full || "";
+  return "";
+}
+
+/* Real buyer messages, kept in the words they were written in. */
+var REVIEWS = [
+  {q:"Got it! She looks lovely! Thank you again!", n:"disknight"},
+  {q:"I saw it and it looks good. Hopefully some day in the future there's another OC I'll adopt from you.", n:"4KOT4K"},
+  {q:"I got it! Thanks! Good luck with your future auctions!", n:"rogan"},
+  {q:"Received. Thank you! And I'll drop you a follow as well. Thanks again!", n:"ClearNote38"},
+  {q:"I've got it! Tysm!", n:"abruptragnarok"},
+  {q:"fox girl received, thank you for your time", n:"hyton"}
+];
+
+var TIERS = [
+  {k:"sketch", feat:false, p:[20,25,35]},
+  {k:"lineart",feat:false, p:[30,40,55]},
+  {k:"flat",   feat:false, p:[40,50,65]},
+  {k:"render", feat:true,  p:[50,65,85]}
+];
+
+var ADDONS = [
+  ["aoOutfit","+$30"],["aoChibi","+$20"],["aoBeast","+$40"],["aoChar","+50%"],
+  ["aoExpr","+$20"],["aoBack","+$30"],["aoPose","+$25"],["aoPov","+$10–40"],
+  ["aoBg","from $30"],["aoNsfw","+$55"]
+];
+
+/* ---------------- translations ---------------- */
+var T = {};
+
+T.en = {
+brandSub:"Character artist", brandSub2:"Character artist",
+navAbout:"About me", navWorks:"My works", navProcess:"How I work", navPricing:"Pricing", navFaq:"FAQ", navContact:"Contacts",
+langH:"Language",
+heroKicker:"Adoptables · OCs · Commissions",
+heroH1a:"Hey, I'm Nika. I draw characters you'll get", heroH1b:"way too attached to.",
+heroSub:"Dark fantasy, fox spirits, witches and demon girls — basically whatever's been living in your head rent-free. Adopt one that's already waiting, or we build yours from scratch.",
+heroCta1:"See the characters", heroCta2:"Commission me",
+trust1:"Full ownership", trust2:"No watermark, full resolution", trust3:"Sketch approval before I render",
+aboutLabel:"About me",
+aboutTitle:"I spent a long time searching for what truly felt like me",
+st1:"When I was a child, my parents enrolled me in art school because I drew everywhere — on the walls, furniture, and in my notebooks. I created my own manga, made little notebooks for it, and could spend hours drawing characters.",
+st2:"Then I grew up, and the inevitable question came: “What am I going to do with my life?”",
+st3:"I tried programming, photography, and even enrolled in an art university. But then the war began, I had to move, and everything changed again.",
+st4:"After that came nail art, epoxy resin, and eventually almost five years of web design. I worked with people and teams, creating real projects — but somewhere inside, I still felt that it wasn't quite me.",
+st5:"And one day, I simply started drawing characters again. Not for work. Not because I had to. Just because I wanted to.",
+st6:"That's when I realized: no matter how many different paths I tried, I always found my way back to drawing.",
+st7:"Now I finally allow myself to do what I truly love — creating characters, giving them stories, and putting a little piece of myself into each one.",
+st8:"Sometimes you have to take a very long journey to finally find your way back to yourself.",
+worksLabel:"Portfolio", worksTitle:"Characters I have already made",
+worksLede:"This is a portfolio, not a shop — every design here already belongs to someone. If you want one of your own, tap a card: I run new adopt auctions on DeviantArt and take commissions through Commishes.",
+worksHint:"Scroll sideways to see them all · tap any card to find out how to get one",
+findMe:"Find me here", emailWord:'Email<br><span class="h">rizhachika@gmail.com</span>',
+lanternSpirit:"Lantern spirit", frostWitch:"Frost witch", kitsune:"Kitsune", dragonkin:"Dragonkin", demon:"Demon", wolfRider:"Wolf · Rider",
+fyLabel:"Why it keeps getting better", fyTitle:"I design these for you, not at you",
+fy1:"Nothing I draw is random. Before a new character exists, I go back through what you saved, what you bid on, and which messages said “oh my god, she's perfect.” That's my brief.",
+fy2:"So every drop lands a little closer than the last one — the palettes you reach for, the archetypes you keep coming back to, the small details you notice and take the time to tell me about.",
+fy3:"I know that isn't how most artists work. But you are the reason this is my job now, and I would rather make the thing you actually wanted than the thing I assumed you did.",
+fyHeart:"I love you all, and I just want to keep making more for you.",
+revLabel:"What buyers say",
+procLabel:"How I work", procTitle:"From “I have an idea” to “she's mine”",
+procLede:"The same five steps every time, so you always know where your character is and what happens next.",
+s1t:"You tell me the vibe", s1d:"References, a mood, a half-formed idea, three words and a colour — all of it works. There is no wrong way to brief me, and I will ask the questions you did not think of.",
+s2t:"I build the concept", s2d:"Silhouette, palette, and the details that make them read as a person instead of a costume. This is where most of the thinking happens.",
+s3t:"You see the sketch first", s3d:"Nothing gets rendered until you have seen it. Changes at this stage are free — I would rather redo a sketch than hand you something that is not them.",
+s4t:"Line and render", s4d:"Clean lines, lighting, and the sparkle. This is the slow part, and the part I love most.",
+s5t:"They are yours", s5d:"Full-resolution files, no watermark, full ownership. Rename them, rewrite the lore, and draw them for as long as you like.",
+priceLabel:"Pricing", priceTitle:"Character art commissions",
+priceLede:"Starting points rather than final numbers — complexity and detail move them. Every commission is a little different, so we settle the exact price together before anything begins.",
+sketch:"Sketch", lineart:"Lineart", flat:"Flat colors", render:"Full render",
+sketchN:"Clean pencil, no colour.", lineartN:"Finished linework, ready to colour.", flatN:"Solid colour, light shading.", renderN:"Lighting, texture, the full finish.",
+bust:"Bust", half:"Half-body", full:"Full-body",
+addonsH:"Add-ons", commH:"Commercial use",
+commP:"Of the artwork price. Covers merchandise, advertising, branding, monetized content and other business purposes.",
+aoOutfit:"Alternative outfit", aoChibi:"Chibi version", aoBeast:"Spirit / beast form", aoChar:"Additional character",
+aoExpr:"2 additional expressions", aoBack:"Back view", aoPose:"Additional pose / version",
+aoPov:"Complex POV / foreshortening", aoBg:"Detailed background", aoNsfw:"NSFW unlock",
+priceFine:"Prices are starting points and may vary depending on the complexity and amount of detail. Every commission is unique, so the final price is discussed individually.",
+priceCta:"Have a custom idea? Message me", priceCtaNote:"I answer everything myself, usually within a day.",
+faqLabel:"FAQ", faqTitle:"Things people ask me",
+q1:"What do I actually get?", a1:"The full-resolution PNG without the watermark, the complete character design, and full ownership for personal use. Once they are yours you can rename them, rewrite their story, and draw them as much as you like.",
+q2:"Can I change the design after I buy?", a2:"Yes, but changes after the artwork is finished and delivered are a paid add-on — they are not free. The ones listed above (a new outfit, a beast form, an extra pose) are priced there, and for anything smaller I will quote you before I start. The one stage where changes cost nothing is the sketch, which is exactly why I always show it to you before I render.",
+q3:"How do I pay?", a3:"PayPal is the simplest: I send you my address, you pay, and the files go straight to your email. I also take crypto to a Bybit or Binance wallet, and Western Union. If none of those work for you, I have a Patreon, but it charges around 10% and that fee is paid by the buyer, so it will cost you more than the other options — worth knowing before you pick it. Everything is priced in USD, and I don't take holds or part payments on smaller pieces.",
+q4:"How long does it take?", a4:"A sketch is usually a few days. A full render takes one to two weeks depending on how long my queue is. I will always give you the real number before you pay, not an optimistic one.",
+q5:"Can I use the character commercially?", a5:"Yes — commercial rights are +50% of the artwork price. That covers merch, advertising, branding and monetized content. Without it, the character is yours for personal use.",
+q6:"Can I resell an adopt?", a6:"You can, but please do not resell above what you paid, and credit me as the original designer. That is standard adopt etiquette and it keeps the whole community honest.",
+contactLabel:"Contacts", contactTitle:"Come say hi",
+contactLede:"I answer everything myself, usually within a day. If you are not sure what you want yet, that is completely fine — message me anyway and we will figure it out together.",
+mailL:"Email · the fastest way", copy:"Copy address", copied:"Copied",
+payNote:"PayPal, crypto (Bybit or Binance), Western Union or Patreon — all priced in USD. Files are delivered to your email at full resolution, without a watermark.",
+legal0:"All rights reserved.",
+legal1:"Every character design, illustration and piece of artwork on this site is my own original work and my intellectual property, protected by copyright. Copying, reposting, editing, reselling, or using any of it to train AI models — in whole or in part, with or without changes — is not permitted without my written consent.",
+legal2:"Unauthorised use is an infringement of my rights and I do act on it, including takedown requests to the host and platform and, where it is warranted, further legal action.",
+legal3:"Buying a character or a commission gives you the usage rights described on this page. It does not transfer the copyright in the artwork itself.",
+noteA:"hi, that's me",
+noteB:"every character starts right here",
+flipCue:"tap",
+flipAria:"Flip card",
+cardQ:"Want a character of your own?",
+cardSheet:"See the full sheet",
+chibiHi:"hi!",
+chibiAria:"Say hi to nyxika",
+vampire:"Vampire",
+witch:"Witch",
+bunnyMaid:"Bunny maid",
+seeMore:"See more",
+seeMoreSub:"All characters, backgrounds and half-body work",
+pieces:"pieces",
+backHome:"Back to the site",
+galLabel:"Full portfolio",
+galTitle:"Everything I have drawn",
+galLede:"Characters first, then the backgrounds I paint for them, then half-body work. Click any piece to see it full size.",
+jumpChars:"Characters",
+jumpBgs:"Backgrounds",
+jumpHalf:"Half body",
+galCharsLabel:"Characters",
+galCharsTitle:"Original characters and adopts",
+galCharsNote:"Every one of these is my own design. The ones already adopted belong to their owners now.",
+galBgLabel:"Backgrounds",
+galBgTitle:"Backgrounds I paint for characters",
+galBgNote:"A character reads differently once they have somewhere to stand. I build the room first, then light it — the study below is painted three times over, for night, dusk and day, so the same character can live in it at any hour.",
+galHalfLabel:"Half body",
+galHalfTitle:"Busts and half-body pieces",
+galHalfNote:"Closer in, where the face and the fabric do the work. These are commissions drawn from my clients' own characters.",
+galCtaTitle:"Want something like this for your own character?",
+galCtaPrice:"See prices",
+bgStudy:"Witch's study",
+bgShipN:"Ship bridge",
+bgNight:"Night",
+bgDusk:"Dusk",
+bgDay:"Day",
+bgShip:"Sci-fi interior",
+hbSpiderN:"Spider spirit",
+hbCorridorN:"Night corridor",
+bustTag:"Bust",
+halfTag:"Half body",
+navAll:"All works",
+writeMe:"Message me"
+};
+
+T.uk = {
+brandSub:"Художниця персонажів", brandSub2:"Художниця персонажів",
+navAbout:"Про мене", navWorks:"Мої роботи", navProcess:"Як я працюю", navPricing:"Ціни", navFaq:"Питання", navContact:"Контакти",
+langH:"Мова",
+heroKicker:"Адопти · OC · Комісії",
+heroH1a:"Привіт, я Ніка. Я малюю персонажів, до яких", heroH1b:"ви надто прив'яжетесь.",
+heroSub:"Темне фентезі, лисячі духи, відьми та демониці — усе те, що давно живе у вас у голові. Заберіть собі того, хто вже чекає, або створимо вашого з нуля.",
+heroCta1:"Подивитись персонажів", heroCta2:"Замовити арт",
+trust1:"Повні права власності", trust2:"Без вотермарки, повна роздільність", trust3:"Погодження скетчу перед рендером",
+aboutLabel:"Про мене",
+aboutTitle:"Я довго шукала те, що справді відчувалося моїм",
+st1:"У дитинстві батьки віддали мене до художньої школи, бо я малювала всюди — на стінах, на меблях, у зошитах. Я вигадувала власну мангу, робила для неї маленькі саморобні книжечки й могла годинами малювати персонажів.",
+st2:"Потім я виросла, і прийшло неминуче питання: «А що я робитиму зі своїм життям?»",
+st3:"Я пробувала програмування, фотографію, навіть вступила до художнього університету. Та почалася війна, довелося переїхати, і все знову змінилося.",
+st4:"Далі був нейл-арт, епоксидна смола, а згодом майже п'ять років вебдизайну. Я працювала з людьми й командами, робила справжні проєкти — але десь усередині все одно відчувала, що це не зовсім я.",
+st5:"А одного дня я просто знову почала малювати персонажів. Не для роботи. Не тому, що треба. Просто тому, що хотілося.",
+st6:"Тоді я зрозуміла: скільки б різних шляхів я не пробувала, я завжди поверталася до малювання.",
+st7:"Тепер я нарешті дозволяю собі робити те, що по-справжньому люблю — створювати персонажів, давати їм історії й вкладати в кожного частинку себе.",
+st8:"Іноді треба пройти дуже довгий шлях, щоб нарешті повернутися до себе.",
+worksLabel:"Портфоліо", worksTitle:"Персонажі, яких я вже створила",
+worksLede:"Це портфоліо, а не магазин — кожен дизайн тут уже комусь належить. Якщо хочете власного, натисніть на картку: нові аукціони адоптів я проводжу на DeviantArt, а замовлення беру через Commishes.",
+worksHint:"Гортайте вбік, щоб побачити всіх · натисніть на картку, щоб дізнатись, як отримати свого",
+findMe:"Де мене знайти", emailWord:'Пошта<br><span class="h">rizhachika@gmail.com</span>',
+lanternSpirit:"Дух ліхтаря", frostWitch:"Крижана відьма", kitsune:"Кіцуне", dragonkin:"Драконіда", demon:"Демониця", wolfRider:"Вовчиця · Байкерка",
+fyLabel:"Чому далі буде краще", fyTitle:"Я малюю це для вас, а не просто перед вами",
+fy1:"Нічого з того, що я малюю, не випадкове. Перш ніж з'явиться новий персонаж, я переглядаю, що ви зберігали, за що ставили, у яких повідомленнях писали «боже, вона ідеальна». Це і є моє техзавдання.",
+fy2:"Тому кожен наступний персонаж влучає трохи точніше за попереднього — палітри, до яких ви тягнетесь, архетипи, до яких повертаєтесь, дрібні деталі, які ви помічаєте й не лінуєтесь мені про них написати.",
+fy3:"Знаю, що більшість художників працює інакше. Але саме завдяки вам це стало моєю роботою, і я краще зроблю те, чого ви справді хотіли, ніж те, що я собі придумала.",
+fyHeart:"Я вас усіх дуже люблю і просто хочу робити для вас більше.",
+revLabel:"Що кажуть покупці",
+procLabel:"Як я працюю", procTitle:"Від «у мене є ідея» до «вона моя»",
+procLede:"Щоразу ті самі п'ять кроків, щоб ви завжди знали, на якому етапі ваш персонаж і що буде далі.",
+s1t:"Ви розказуєте настрій", s1d:"Референси, настрій, напівсформована ідея, три слова й колір — підійде все. Неправильного способу пояснити мені немає, а решту я спитаю сама.",
+s2t:"Я будую концепт", s2d:"Силует, палітра й ті деталі, завдяки яким персонаж читається як особистість, а не як костюм. Саме тут відбувається більшість роботи головою.",
+s3t:"Спершу ви бачите скетч", s3d:"Нічого не рендериться, поки ви не подивились. Правки на цьому етапі безкоштовні — краще я перероблю скетч, ніж віддам вам не того персонажа.",
+s4t:"Лайн і рендер", s4d:"Чисті лінії, світло й блиск. Це найповільніша частина — і та, яку я люблю найбільше.",
+s5t:"Він ваш", s5d:"Файли у повній роздільності, без вотермарки, повні права власності. Перейменовуйте, переписуйте лор і малюйте скільки завгодно.",
+priceLabel:"Ціни", priceTitle:"Комісії на артах персонажів",
+priceLede:"Це стартові цифри, а не остаточні — складність і кількість деталей їх змінюють. Кожне замовлення трохи інше, тож точну ціну ми узгоджуємо разом до початку роботи.",
+sketch:"Скетч", lineart:"Лайнарт", flat:"Плоский колір", render:"Повний рендер",
+sketchN:"Чистий олівець, без кольору.", lineartN:"Готовий лайн, готовий до фарбування.", flatN:"Заливка кольором, легка тінь.", renderN:"Світло, текстура, повне опрацювання.",
+bust:"Бюст", half:"Півтіла", full:"Повний зріст",
+addonsH:"Додатково", commH:"Комерційне використання",
+commP:"Від ціни роботи. Покриває мерч, рекламу, брендинг, монетизований контент та інші бізнес-цілі.",
+aoOutfit:"Альтернативний аутфіт", aoChibi:"Чібі-версія", aoBeast:"Духовна / звіряча форма", aoChar:"Додатковий персонаж",
+aoExpr:"2 додаткові емоції", aoBack:"Вид зі спини", aoPose:"Додаткова поза / версія",
+aoPov:"Складний ракурс / перспектива", aoBg:"Опрацьований фон", aoNsfw:"NSFW-версія",
+priceFine:"Ціни є стартовими й можуть змінюватися залежно від складності та кількості деталей. Кожне замовлення унікальне, тож фінальна ціна обговорюється індивідуально.",
+priceCta:"Є своя ідея? Напишіть мені", priceCtaNote:"Я відповідаю сама, зазвичай протягом доби.",
+faqLabel:"Часті питання", faqTitle:"Що в мене найчастіше питають",
+q1:"Що саме я отримую?", a1:"PNG у повній роздільності без вотермарки, повний дизайн персонажа та повні права власності для особистого використання. Щойно персонаж ваш, ви можете його перейменувати, переписати його історію й малювати скільки завгодно.",
+q2:"Чи можна змінити дизайн після купівлі?", a2:"Так, але зміни після того, як робота готова й передана, — це платне доповнення, а не безкоштовно. Те, що в списку вище (новий аутфіт, звіряча форма, додаткова поза), має свої ціни, а за дрібніше я назву ціну до початку. Єдиний етап, де правки нічого не коштують, — це скетч, саме тому я завжди показую його перед рендером.",
+q3:"Як оплатити?", a3:"Найпростіше — PayPal: я надсилаю свою адресу, ви оплачуєте, і файли одразу йдуть вам на пошту. Також приймаю криптовалюту на гаманець Bybit або Binance і Western Union. Якщо жоден із варіантів не підходить, у мене є Patreon, але там комісія близько 10%, і платить її покупець — тож вийде дорожче, ніж іншими способами, майте це на увазі. Усі ціни в доларах; холдів і часткових оплат на невеликих роботах я не роблю.",
+q4:"Скільки часу це займає?", a4:"Скетч зазвичай кілька днів. Повний рендер — один-два тижні, залежно від черги. Я завжди називаю реальний строк до оплати, а не оптимістичний.",
+q5:"Чи можна використовувати персонажа комерційно?", a5:"Так — комерційні права це +50% до ціни роботи. Вони покривають мерч, рекламу, брендинг і монетизований контент. Без них персонаж ваш для особистого використання.",
+q6:"Чи можна перепродати адопта?", a6:"Можна, але, будь ласка, не дорожче, ніж ви заплатили, і з вказанням мене як оригінальної дизайнерки. Це стандартна етика адопт-спільноти, і саме вона тримає її чесною.",
+contactLabel:"Контакти", contactTitle:"Пишіть, я рада",
+contactLede:"Я відповідаю на все сама, зазвичай протягом доби. Якщо ви ще не визначились, чого саме хочете — це цілком нормально, напишіть усе одно, і ми розберемося разом.",
+mailL:"Пошта · найшвидший спосіб", copy:"Скопіювати адресу", copied:"Скопійовано",
+payNote:"PayPal, криптовалюта (Bybit або Binance), Western Union чи Patreon — усі ціни в доларах. Файли приходять на вашу пошту у повній роздільності, без вотермарки.",
+legal0:"Усі права захищено.",
+legal1:"Кожен дизайн персонажа, ілюстрація та будь-яка робота на цьому сайті є моїм оригінальним твором і моєю інтелектуальною власністю, захищеною авторським правом. Копіювання, перепублікація, редагування, перепродаж або використання будь-чого з цього для навчання моделей ШІ — повністю чи частково, зі змінами чи без — заборонено без моєї письмової згоди.",
+legal2:"Несанкціоноване використання є порушенням моїх прав, і я на нього реагую: подаю скарги хостингу та платформам, а за потреби звертаюся й до подальших правових засобів.",
+legal3:"Купівля персонажа чи замовлення дає вам права використання, описані на цій сторінці. Вона не передає авторське право на сам твір.",
+noteA:"привіт, це я",
+noteB:"кожен персонаж починається тут",
+flipCue:"тиць",
+flipAria:"Перевернути картку",
+cardQ:"Хочете власного персонажа?",
+cardSheet:"Повний референс-лист",
+chibiHi:"привіт!",
+chibiAria:"Привітатися з nyxika",
+vampire:"Вампірка",
+witch:"Відьма",
+bunnyMaid:"Зайчиха-покоївка",
+seeMore:"Дивитись більше",
+seeMoreSub:"Усі персонажі, фони та half-body роботи",
+pieces:"робіт",
+backHome:"Назад на сайт",
+galLabel:"Повне портфоліо",
+galTitle:"Усе, що я намалювала",
+galLede:"Спочатку персонажі, потім фони, які я малюю для них, далі half-body. Натисніть на будь-яку роботу, щоб побачити її повністю.",
+jumpChars:"Персонажі",
+jumpBgs:"Фони",
+jumpHalf:"Half body",
+galCharsLabel:"Персонажі",
+galCharsTitle:"Оригінальні персонажі та адопти",
+galCharsNote:"Кожен із них — мій власний дизайн. Ті, кого вже забрали, належать своїм власникам.",
+galBgLabel:"Фони",
+galBgTitle:"Фони, які я малюю під персонажів",
+galBgNote:"Персонаж читається інакше, коли в нього є де стояти. Спершу я будую саму кімнату, а тоді ставлю світло — кабінет нижче намальований тричі: ніч, сутінки й день, щоб той самий персонаж міг жити в ньому о будь-якій порі.",
+galHalfLabel:"Half body",
+galHalfTitle:"Бюсти та half-body роботи",
+galHalfNote:"Ближчий план, де працюють обличчя й тканина. Це замовлення, намальовані з персонажів моїх клієнтів.",
+galCtaTitle:"Хочете таке саме для свого персонажа?",
+galCtaPrice:"Подивитись ціни",
+bgStudy:"Кабінет відьми",
+bgShipN:"Місток корабля",
+bgNight:"Ніч",
+bgDusk:"Сутінки",
+bgDay:"День",
+bgShip:"Sci-fi інтер'єр",
+hbSpiderN:"Павучий дух",
+hbCorridorN:"Нічний коридор",
+bustTag:"Бюст",
+halfTag:"Half body",
+navAll:"Усі роботи",
+writeMe:"Написати мені"
+};
+
+T.es = {
+brandSub:"Artista de personajes", brandSub2:"Artista de personajes",
+navAbout:"Sobre mí", navWorks:"Mis trabajos", navProcess:"Cómo trabajo", navPricing:"Precios", navFaq:"Preguntas", navContact:"Contacto",
+langH:"Idioma",
+heroKicker:"Adoptables · OCs · Encargos",
+heroH1a:"Hola, soy Nika. Dibujo personajes a los que", heroH1b:"te vas a encariñar demasiado.",
+heroSub:"Fantasía oscura, espíritus zorro, brujas y chicas demonio — básicamente lo que lleva tiempo viviendo gratis en tu cabeza. Adopta a alguien que ya está esperando, o creamos el tuyo desde cero.",
+heroCta1:"Ver los personajes", heroCta2:"Hacer un encargo",
+trust1:"Propiedad completa", trust2:"Sin marca de agua, máxima resolución", trust3:"Apruebas el boceto antes de renderizar",
+aboutLabel:"Sobre mí",
+aboutTitle:"Pasé mucho tiempo buscando lo que de verdad se sentía mío",
+st1:"De niña, mis padres me apuntaron a la escuela de arte porque dibujaba en todas partes — en las paredes, en los muebles y en mis cuadernos. Creaba mi propio manga, hacía libretitas para él y podía pasarme horas dibujando personajes.",
+st2:"Después crecí, y llegó la pregunta inevitable: «¿Qué voy a hacer con mi vida?»",
+st3:"Probé la programación, la fotografía, e incluso entré en una universidad de arte. Pero entonces empezó la guerra, tuve que mudarme y todo cambió otra vez.",
+st4:"Luego vino el nail art, la resina epoxi y, con el tiempo, casi cinco años de diseño web. Trabajé con personas y equipos, creando proyectos reales — pero en algún lugar dentro de mí seguía sintiendo que no era del todo yo.",
+st5:"Y un día simplemente volví a dibujar personajes. No por trabajo. No porque tuviera que hacerlo. Solo porque quería.",
+st6:"Ahí me di cuenta: por muchos caminos distintos que probara, siempre terminaba volviendo al dibujo.",
+st7:"Ahora por fin me permito hacer lo que de verdad amo — crear personajes, darles historias y poner un pedacito de mí en cada uno.",
+st8:"A veces hay que recorrer un camino muy largo para volver por fin a una misma.",
+worksLabel:"Portafolio", worksTitle:"Personajes que ya he creado",
+worksLede:"Esto es un portafolio, no una tienda: cada diseño de aquí ya pertenece a alguien. Si quieres uno propio, pulsa una tarjeta: hago subastas de adoptables en DeviantArt y acepto encargos a través de Commishes.",
+worksHint:"Desliza hacia los lados para verlos todos · pulsa una tarjeta para saber cómo conseguir el tuyo",
+findMe:"Dónde encontrarme", emailWord:'Correo<br><span class="h">rizhachika@gmail.com</span>',
+lanternSpirit:"Espíritu del farol", frostWitch:"Bruja de hielo", kitsune:"Kitsune", dragonkin:"Estirpe de dragón", demon:"Demonio", wolfRider:"Loba · Motera",
+fyLabel:"Por qué cada vez va a mejor", fyTitle:"Los diseño para ti, no hacia ti",
+fy1:"Nada de lo que dibujo es al azar. Antes de que exista un personaje nuevo, repaso lo que guardasteis, por lo que pujasteis y qué mensajes decían «dios mío, es perfecta». Ese es mi briefing.",
+fy2:"Por eso cada lanzamiento acierta un poco más que el anterior — las paletas que buscáis, los arquetipos a los que volvéis, los pequeños detalles que notáis y os tomáis el tiempo de contarme.",
+fy3:"Sé que no es así como trabaja la mayoría. Pero vosotros sois la razón de que esto sea mi trabajo ahora, y prefiero hacer lo que de verdad queríais antes que lo que yo supuse.",
+fyHeart:"Os quiero mucho a todos, y solo quiero seguir haciendo más para vosotros.",
+revLabel:"Lo que dicen los compradores",
+procLabel:"Cómo trabajo", procTitle:"De «tengo una idea» a «es mía»",
+procLede:"Los mismos cinco pasos siempre, para que sepas en todo momento dónde está tu personaje y qué viene después.",
+s1t:"Me cuentas el rollo", s1d:"Referencias, un ambiente, una idea a medio formar, tres palabras y un color — todo vale. No hay una forma incorrecta de explicármelo, y yo preguntaré lo que no se te haya ocurrido.",
+s2t:"Construyo el concepto", s2d:"Silueta, paleta y los detalles que hacen que se lea como una persona y no como un disfraz. Aquí es donde ocurre la mayor parte del pensamiento.",
+s3t:"Primero ves el boceto", s3d:"No se renderiza nada hasta que lo hayas visto. Los cambios en esta fase son gratis — prefiero rehacer un boceto antes que entregarte algo que no es tu personaje.",
+s4t:"Línea y render", s4d:"Líneas limpias, iluminación y brillo. Es la parte lenta, y la que más me gusta.",
+s5t:"Ya es tuyo", s5d:"Archivos a máxima resolución, sin marca de agua, propiedad completa. Cámbiale el nombre, reescribe su historia y dibújalo todo lo que quieras.",
+priceLabel:"Precios", priceTitle:"Encargos de arte de personajes",
+priceLede:"Son puntos de partida, no cifras finales — la complejidad y el nivel de detalle los mueven. Cada encargo es un poco distinto, así que acordamos el precio exacto juntos antes de empezar.",
+sketch:"Boceto", lineart:"Lineart", flat:"Color plano", render:"Render completo",
+sketchN:"Lápiz limpio, sin color.", lineartN:"Línea terminada, lista para colorear.", flatN:"Color sólido, sombra ligera.", renderN:"Luz, textura y acabado completo.",
+bust:"Busto", half:"Medio cuerpo", full:"Cuerpo entero",
+addonsH:"Extras", commH:"Uso comercial",
+commP:"Sobre el precio de la obra. Cubre merchandising, publicidad, branding, contenido monetizado y otros fines comerciales.",
+aoOutfit:"Atuendo alternativo", aoChibi:"Versión chibi", aoBeast:"Forma espiritual / bestia", aoChar:"Personaje adicional",
+aoExpr:"2 expresiones extra", aoBack:"Vista de espaldas", aoPose:"Pose / versión adicional",
+aoPov:"Ángulo complejo / escorzo", aoBg:"Fondo detallado", aoNsfw:"Versión NSFW",
+priceFine:"Los precios son orientativos y pueden variar según la complejidad y la cantidad de detalle. Cada encargo es único, así que el precio final se acuerda de forma individual.",
+priceCta:"¿Tienes una idea propia? Escríbeme", priceCtaNote:"Respondo yo misma, normalmente en un día.",
+faqLabel:"Preguntas frecuentes", faqTitle:"Lo que más me preguntan",
+q1:"¿Qué recibo exactamente?", a1:"El PNG a máxima resolución sin marca de agua, el diseño completo del personaje y la propiedad total para uso personal. Una vez es tuyo, puedes cambiarle el nombre, reescribir su historia y dibujarlo cuanto quieras.",
+q2:"¿Puedo cambiar el diseño después de comprarlo?", a2:"Sí, pero los cambios una vez terminada y entregada la obra son un extra de pago, no son gratis. Los que aparecen arriba (un atuendo nuevo, una forma bestia, una pose extra) ya tienen precio, y cualquier cosa menor te la presupuesto antes de empezar. La única fase en la que los cambios no cuestan nada es el boceto, y por eso siempre te lo enseño antes de renderizar.",
+q3:"¿Cómo se paga?", a3:"Lo más sencillo es PayPal: te envío mi dirección, pagas y los archivos van directos a tu correo. También acepto cripto a una cartera de Bybit o Binance, y Western Union. Si ninguna de esas opciones te sirve, tengo un Patreon, pero cobra alrededor de un 10% y esa comisión la paga el comprador, así que te saldrá más caro que las demás opciones; tenlo en cuenta antes de elegirla. Todo se cobra en dólares y no hago reservas ni pagos parciales en trabajos pequeños.",
+q4:"¿Cuánto tarda?", a4:"Un boceto suele ser cuestión de días. Un render completo lleva de una a dos semanas según la cola. Siempre te doy el plazo real antes de que pagues, no el optimista.",
+q5:"¿Puedo usar el personaje comercialmente?", a5:"Sí — los derechos comerciales son un +50% sobre el precio de la obra. Cubren merch, publicidad, branding y contenido monetizado. Sin ellos, el personaje es tuyo para uso personal.",
+q6:"¿Puedo revender un adoptable?", a6:"Puedes, pero por favor no lo revendas por encima de lo que pagaste, y acredítame como diseñadora original. Es la etiqueta habitual en la comunidad y es lo que la mantiene honesta.",
+contactLabel:"Contacto", contactTitle:"Ven a saludar",
+contactLede:"Respondo todo yo misma, normalmente en un día. Si aún no sabes bien qué quieres, no pasa nada — escríbeme igual y lo resolvemos juntos.",
+mailL:"Correo · la vía más rápida", copy:"Copiar dirección", copied:"Copiado",
+payNote:"PayPal, cripto (Bybit o Binance), Western Union o Patreon: todo en dólares. Los archivos llegan a tu correo a máxima resolución y sin marca de agua.",
+legal0:"Todos los derechos reservados.",
+legal1:"Cada diseño de personaje, ilustración y obra de este sitio es trabajo original mío y mi propiedad intelectual, protegida por derechos de autor. Copiar, republicar, editar, revender o usar cualquier parte para entrenar modelos de IA — total o parcialmente, con o sin modificaciones — no está permitido sin mi consentimiento por escrito.",
+legal2:"El uso no autorizado infringe mis derechos y actúo en consecuencia, incluidas solicitudes de retirada al hosting y a las plataformas y, cuando corresponde, acciones legales adicionales.",
+legal3:"Comprar un personaje o un encargo te da los derechos de uso descritos en esta página. No transfiere los derechos de autor sobre la obra en sí.",
+noteA:"hola, esa soy yo",
+noteB:"cada personaje empieza justo aquí",
+flipCue:"pulsa",
+flipAria:"Girar la tarjeta",
+cardQ:"¿Quieres un personaje propio?",
+cardSheet:"Ver la hoja completa",
+chibiHi:"¡hola!",
+chibiAria:"Saluda a nyxika",
+vampire:"Vampira",
+witch:"Bruja",
+bunnyMaid:"Coneja sirvienta",
+seeMore:"Ver más",
+seeMoreSub:"Todos los personajes, fondos y trabajos de medio cuerpo",
+pieces:"obras",
+backHome:"Volver al sitio",
+galLabel:"Portafolio completo",
+galTitle:"Todo lo que he dibujado",
+galLede:"Primero los personajes, después los fondos que pinto para ellos y luego el trabajo de medio cuerpo. Pulsa cualquier obra para verla a tamaño completo.",
+jumpChars:"Personajes",
+jumpBgs:"Fondos",
+jumpHalf:"Medio cuerpo",
+galCharsLabel:"Personajes",
+galCharsTitle:"Personajes originales y adoptables",
+galCharsNote:"Todos son diseño mío. Los que ya han sido adoptados pertenecen ahora a sus dueños.",
+galBgLabel:"Fondos",
+galBgTitle:"Fondos que pinto para los personajes",
+galBgNote:"Un personaje se lee distinto cuando tiene un sitio donde estar. Primero construyo la sala y después la ilumino: el estudio de abajo está pintado tres veces — noche, atardecer y día — para que el mismo personaje pueda vivir en él a cualquier hora.",
+galHalfLabel:"Medio cuerpo",
+galHalfTitle:"Bustos y piezas de medio cuerpo",
+galHalfNote:"Más de cerca, donde mandan la cara y la tela. Son encargos dibujados a partir de los personajes de mis clientes.",
+galCtaTitle:"¿Quieres algo así para tu propio personaje?",
+galCtaPrice:"Ver precios",
+bgStudy:"Estudio de la bruja",
+bgShipN:"Puente de la nave",
+bgNight:"Noche",
+bgDusk:"Atardecer",
+bgDay:"Día",
+bgShip:"Interior sci-fi",
+hbSpiderN:"Espíritu araña",
+hbCorridorN:"Corredor nocturno",
+bustTag:"Busto",
+halfTag:"Medio cuerpo",
+navAll:"Todas las obras",
+writeMe:"Escríbeme"
+};
+
+T.fr = {
+brandSub:"Artiste de personnages", brandSub2:"Artiste de personnages",
+navAbout:"À propos", navWorks:"Mes travaux", navProcess:"Ma méthode", navPricing:"Tarifs", navFaq:"Questions", navContact:"Contact",
+langH:"Langue",
+heroKicker:"Adoptables · OC · Commandes",
+heroH1a:"Salut, moi c'est Nika. Je dessine des personnages auxquels", heroH1b:"vous vous attacherez beaucoup trop.",
+heroSub:"Dark fantasy, esprits renards, sorcières et filles démones — en gros, tout ce qui squatte votre tête depuis un moment. Adoptez quelqu'un qui attend déjà, ou créons le vôtre de zéro.",
+heroCta1:"Voir les personnages", heroCta2:"Commander",
+trust1:"Pleine propriété", trust2:"Sans filigrane, pleine résolution", trust3:"Croquis validé avant le rendu",
+aboutLabel:"À propos de moi",
+aboutTitle:"J'ai longtemps cherché ce qui me ressemblait vraiment",
+st1:"Enfant, mes parents m'ont inscrite à l'école d'art parce que je dessinais partout — sur les murs, sur les meubles et dans mes cahiers. Je créais mon propre manga, je lui fabriquais de petits carnets et je pouvais passer des heures à dessiner des personnages.",
+st2:"Puis j'ai grandi, et la question inévitable est arrivée : « Qu'est-ce que je vais faire de ma vie ? »",
+st3:"J'ai essayé la programmation, la photographie, et je suis même entrée dans une université d'art. Mais la guerre a commencé, j'ai dû déménager, et tout a changé à nouveau.",
+st4:"Ensuite sont venus le nail art, la résine époxy, puis presque cinq ans de design web. J'ai travaillé avec des gens et des équipes, sur de vrais projets — mais au fond, je sentais toujours que ce n'était pas tout à fait moi.",
+st5:"Et un jour, j'ai simplement recommencé à dessiner des personnages. Pas pour le travail. Pas par obligation. Juste parce que j'en avais envie.",
+st6:"C'est là que j'ai compris : peu importe le nombre de chemins essayés, je revenais toujours au dessin.",
+st7:"Aujourd'hui je m'autorise enfin à faire ce que j'aime vraiment — créer des personnages, leur donner une histoire et mettre un peu de moi dans chacun d'eux.",
+st8:"Parfois il faut faire un très long chemin pour enfin revenir à soi.",
+worksLabel:"Portfolio", worksTitle:"Les personnages que j'ai déjà créés",
+worksLede:"C'est un portfolio, pas une boutique — chaque design ici appartient déjà à quelqu'un. Si vous en voulez un à vous, cliquez sur une carte : j'organise les ventes d'adoptables sur DeviantArt et je prends les commandes via Commishes.",
+worksHint:"Faites défiler sur le côté pour tous les voir · cliquez sur une carte pour savoir comment en obtenir un",
+findMe:"Où me trouver", emailWord:'E-mail<br><span class="h">rizhachika@gmail.com</span>',
+lanternSpirit:"Esprit de lanterne", frostWitch:"Sorcière de givre", kitsune:"Kitsune", dragonkin:"Sang de dragon", demon:"Démone", wolfRider:"Louve · Motarde",
+fyLabel:"Pourquoi ça s'améliore à chaque fois", fyTitle:"Je les conçois pour vous, pas devant vous",
+fy1:"Rien de ce que je dessine n'est dû au hasard. Avant qu'un nouveau personnage existe, je relis ce que vous avez enregistré, ce sur quoi vous avez enchéri et les messages qui disaient « mon dieu, elle est parfaite ». C'est mon brief.",
+fy2:"Du coup chaque sortie tombe un peu plus juste que la précédente — les palettes vers lesquelles vous allez, les archétypes auxquels vous revenez, les petits détails que vous remarquez et prenez le temps de me raconter.",
+fy3:"Je sais que ce n'est pas comme ça que travaillent la plupart des artistes. Mais c'est grâce à vous que c'est devenu mon métier, et je préfère faire ce que vous vouliez vraiment plutôt que ce que j'avais supposé.",
+fyHeart:"Je vous aime très fort, et je veux juste continuer à créer davantage pour vous.",
+revLabel:"Ce que disent les acheteurs",
+procLabel:"Ma méthode", procTitle:"De « j'ai une idée » à « elle est à moi »",
+procLede:"Les mêmes cinq étapes à chaque fois, pour que vous sachiez toujours où en est votre personnage et ce qui vient ensuite.",
+s1t:"Vous me donnez l'ambiance", s1d:"Des références, une humeur, une idée à moitié formée, trois mots et une couleur — tout fonctionne. Il n'y a pas de mauvaise façon de me briefer, et je poserai les questions auxquelles vous n'avez pas pensé.",
+s2t:"Je construis le concept", s2d:"Silhouette, palette et les détails qui font qu'on lit une personne et non un costume. C'est là que se passe l'essentiel de la réflexion.",
+s3t:"Vous voyez d'abord le croquis", s3d:"Rien n'est rendu avant que vous l'ayez vu. Les modifications à ce stade sont gratuites — je préfère refaire un croquis que vous livrer quelqu'un qui n'est pas le bon.",
+s4t:"Ligne et rendu", s4d:"Lignes nettes, lumière et éclat. C'est la partie lente, et celle que je préfère.",
+s5t:"Il est à vous", s5d:"Fichiers en pleine résolution, sans filigrane, pleine propriété. Renommez-le, réécrivez son histoire et dessinez-le autant que vous voulez.",
+priceLabel:"Tarifs", priceTitle:"Commandes d'illustration de personnages",
+priceLede:"Ce sont des points de départ, pas des montants définitifs — la complexité et le niveau de détail les font bouger. Chaque commande est un peu différente, alors on fixe le prix exact ensemble avant de commencer.",
+sketch:"Croquis", lineart:"Lineart", flat:"Couleurs à plat", render:"Rendu complet",
+sketchN:"Crayon propre, sans couleur.", lineartN:"Trait fini, prêt à colorier.", flatN:"Couleur unie, ombrage léger.", renderN:"Lumière, texture, finition complète.",
+bust:"Buste", half:"Mi-corps", full:"Corps entier",
+addonsH:"Options", commH:"Usage commercial",
+commP:"Du prix de l'œuvre. Couvre le merchandising, la publicité, le branding, le contenu monétisé et autres usages professionnels.",
+aoOutfit:"Tenue alternative", aoChibi:"Version chibi", aoBeast:"Forme esprit / bête", aoChar:"Personnage supplémentaire",
+aoExpr:"2 expressions en plus", aoBack:"Vue de dos", aoPose:"Pose / version supplémentaire",
+aoPov:"Angle complexe / raccourci", aoBg:"Décor détaillé", aoNsfw:"Version NSFW",
+priceFine:"Les prix sont indicatifs et peuvent varier selon la complexité et la quantité de détails. Chaque commande est unique, le prix final se discute donc au cas par cas.",
+priceCta:"Une idée à vous ? Écrivez-moi", priceCtaNote:"Je réponds moi-même, en général sous un jour.",
+faqLabel:"Questions fréquentes", faqTitle:"Ce qu'on me demande souvent",
+q1:"Qu'est-ce que je reçois exactement ?", a1:"Le PNG en pleine résolution sans filigrane, le design complet du personnage et la pleine propriété pour un usage personnel. Une fois qu'il est à vous, vous pouvez le renommer, réécrire son histoire et le dessiner autant que vous voulez.",
+q2:"Puis-je modifier le design après l'achat ?", a2:"Oui, mais les modifications une fois l'illustration terminée et livrée sont une option payante, pas gratuite. Celles listées plus haut (nouvelle tenue, forme bête, pose supplémentaire) ont leur prix, et pour quelque chose de plus petit je vous donne un tarif avant de commencer. La seule étape où les modifications ne coûtent rien, c'est le croquis : c'est précisément pour ça que je vous le montre toujours avant le rendu.",
+q3:"Comment se passe le paiement ?", a3:"Le plus simple reste PayPal : je vous envoie mon adresse, vous payez, et les fichiers partent directement sur votre e-mail. J'accepte aussi les cryptos sur un portefeuille Bybit ou Binance, ainsi que Western Union. Si aucune de ces options ne vous convient, j'ai un Patreon, mais il prélève environ 10% et ces frais sont à la charge de l'acheteur : cela vous reviendra donc plus cher que les autres moyens, autant le savoir avant de choisir. Tout est facturé en dollars, et je ne fais ni réservation ni paiement partiel sur les petites pièces.",
+q4:"Combien de temps ça prend ?", a4:"Un croquis prend généralement quelques jours. Un rendu complet demande une à deux semaines selon la file d'attente. Je vous donne toujours le délai réel avant le paiement, pas le délai optimiste.",
+q5:"Puis-je utiliser le personnage commercialement ?", a5:"Oui — les droits commerciaux sont à +50% du prix de l'œuvre. Ils couvrent le merch, la publicité, le branding et le contenu monétisé. Sans eux, le personnage est à vous pour un usage personnel.",
+q6:"Puis-je revendre un adoptable ?", a6:"Oui, mais merci de ne pas le revendre au-dessus du prix payé, et de me créditer comme créatrice d'origine. C'est l'usage dans la communauté et c'est ce qui la garde honnête.",
+contactLabel:"Contact", contactTitle:"Venez me dire bonjour",
+contactLede:"Je réponds à tout moi-même, en général sous un jour. Si vous ne savez pas encore ce que vous voulez, aucun souci — écrivez quand même et on trouvera ensemble.",
+mailL:"E-mail · le plus rapide", copy:"Copier l'adresse", copied:"Copié",
+payNote:"PayPal, crypto (Bybit ou Binance), Western Union ou Patreon — le tout en dollars. Les fichiers arrivent sur votre e-mail en pleine résolution, sans filigrane.",
+legal0:"Tous droits réservés.",
+legal1:"Chaque design de personnage, illustration et œuvre présente sur ce site est ma création originale et ma propriété intellectuelle, protégée par le droit d'auteur. Copier, republier, modifier, revendre ou utiliser tout ou partie de ces contenus pour entraîner des modèles d'IA — avec ou sans modification — n'est pas autorisé sans mon accord écrit.",
+legal2:"Toute utilisation non autorisée porte atteinte à mes droits et j'y donne suite, notamment par des demandes de retrait auprès de l'hébergeur et des plateformes et, lorsque cela se justifie, par d'autres actions en justice.",
+legal3:"L'achat d'un personnage ou d'une commande vous donne les droits d'usage décrits sur cette page. Il ne transfère pas le droit d'auteur sur l'œuvre elle-même.",
+noteA:"coucou, c'est moi",
+noteB:"chaque personnage commence ici",
+flipCue:"clic",
+flipAria:"Retourner la carte",
+cardQ:"Vous voulez votre propre personnage ?",
+cardSheet:"Voir la fiche complète",
+chibiHi:"salut !",
+chibiAria:"Dire bonjour à nyxika",
+vampire:"Vampire",
+witch:"Sorcière",
+bunnyMaid:"Lapine servante",
+seeMore:"Voir plus",
+seeMoreSub:"Tous les personnages, décors et pièces mi-corps",
+pieces:"pièces",
+backHome:"Retour au site",
+galLabel:"Portfolio complet",
+galTitle:"Tout ce que j'ai dessiné",
+galLede:"D'abord les personnages, puis les décors que je peins pour eux, puis les pièces mi-corps. Cliquez sur une œuvre pour la voir en grand.",
+jumpChars:"Personnages",
+jumpBgs:"Décors",
+jumpHalf:"Mi-corps",
+galCharsLabel:"Personnages",
+galCharsTitle:"Personnages originaux et adoptables",
+galCharsNote:"Tous sont de ma propre création. Ceux déjà adoptés appartiennent désormais à leurs propriétaires.",
+galBgLabel:"Décors",
+galBgTitle:"Les décors que je peins pour les personnages",
+galBgNote:"Un personnage se lit autrement quand il a un endroit où se tenir. Je construis d'abord la pièce, puis je l'éclaire : le cabinet ci-dessous est peint trois fois — nuit, crépuscule et jour — pour qu'un même personnage puisse y vivre à toute heure.",
+galHalfLabel:"Mi-corps",
+galHalfTitle:"Bustes et pièces mi-corps",
+galHalfNote:"Plus près, là où le visage et le tissu font le travail. Ce sont des commandes dessinées d'après les personnages de mes clients.",
+galCtaTitle:"Vous voulez la même chose pour votre personnage ?",
+galCtaPrice:"Voir les tarifs",
+bgStudy:"Cabinet de la sorcière",
+bgShipN:"Passerelle du vaisseau",
+bgNight:"Nuit",
+bgDusk:"Crépuscule",
+bgDay:"Jour",
+bgShip:"Intérieur sci-fi",
+hbSpiderN:"Esprit araignée",
+hbCorridorN:"Couloir nocturne",
+bustTag:"Buste",
+halfTag:"Mi-corps",
+navAll:"Toutes les œuvres",
+writeMe:"Écrivez-moi"
+};
+
+T.de = {
+brandSub:"Character-Artist", brandSub2:"Character-Artist",
+navAbout:"Über mich", navWorks:"Meine Arbeiten", navProcess:"So arbeite ich", navPricing:"Preise", navFaq:"Fragen", navContact:"Kontakt",
+langH:"Sprache",
+heroKicker:"Adoptables · OCs · Auftragsarbeiten",
+heroH1a:"Hi, ich bin Nika. Ich zeichne Charaktere, an die du dich", heroH1b:"viel zu sehr binden wirst.",
+heroSub:"Dark Fantasy, Fuchsgeister, Hexen und Dämoninnen — im Grunde alles, was schon länger mietfrei in deinem Kopf wohnt. Adoptiere jemanden, der schon wartet, oder wir bauen deinen von Grund auf.",
+heroCta1:"Charaktere ansehen", heroCta2:"Auftrag anfragen",
+trust1:"Volle Eigentumsrechte", trust2:"Ohne Wasserzeichen, volle Auflösung", trust3:"Skizzenfreigabe vor dem Rendern",
+aboutLabel:"Über mich",
+aboutTitle:"Ich habe lange gesucht, was sich wirklich nach mir anfühlt",
+st1:"Als Kind haben mich meine Eltern in der Kunstschule angemeldet, weil ich überall gezeichnet habe — an Wänden, auf Möbeln und in meinen Heften. Ich habe meinen eigenen Manga erfunden, kleine Heftchen dafür gebastelt und konnte stundenlang Charaktere zeichnen.",
+st2:"Dann wurde ich älter, und die unvermeidliche Frage kam: „Was mache ich mit meinem Leben?“",
+st3:"Ich habe Programmieren probiert, Fotografie, und mich sogar an einer Kunsthochschule eingeschrieben. Doch dann begann der Krieg, ich musste umziehen, und alles änderte sich wieder.",
+st4:"Danach kamen Nail Art, Epoxidharz und schließlich fast fünf Jahre Webdesign. Ich habe mit Menschen und Teams gearbeitet, echte Projekte gebaut — aber irgendwo in mir fühlte sich das immer noch nicht ganz nach mir an.",
+st5:"Und eines Tages habe ich einfach wieder angefangen, Charaktere zu zeichnen. Nicht für die Arbeit. Nicht, weil ich musste. Nur, weil ich wollte.",
+st6:"Da wurde mir klar: Egal wie viele verschiedene Wege ich ausprobiert habe, ich bin immer zum Zeichnen zurückgekommen.",
+st7:"Jetzt erlaube ich mir endlich das, was ich wirklich liebe — Charaktere zu erschaffen, ihnen Geschichten zu geben und in jeden ein kleines Stück von mir zu legen.",
+st8:"Manchmal muss man einen sehr langen Weg gehen, um endlich wieder bei sich selbst anzukommen.",
+worksLabel:"Portfolio", worksTitle:"Charaktere, die ich schon gemacht habe",
+worksLede:"Das hier ist ein Portfolio, kein Shop — jedes Design gehört bereits jemandem. Wenn du einen eigenen möchtest, tippe auf eine Karte: neue Adoptable-Auktionen laufen bei DeviantArt, Aufträge nehme ich über Commishes an.",
+worksHint:"Zur Seite scrollen, um alle zu sehen · auf eine Karte tippen, um zu erfahren, wie du einen bekommst",
+findMe:"Hier findest du mich", emailWord:'E-Mail<br><span class="h">rizhachika@gmail.com</span>',
+lanternSpirit:"Laternengeist", frostWitch:"Frosthexe", kitsune:"Kitsune", dragonkin:"Drachenblut", demon:"Dämonin", wolfRider:"Wölfin · Bikerin",
+fyLabel:"Warum es immer besser wird", fyTitle:"Ich entwerfe sie für euch, nicht an euch vorbei",
+fy1:"Nichts, was ich zeichne, ist zufällig. Bevor ein neuer Charakter entsteht, gehe ich noch einmal durch, was ihr gespeichert habt, worauf ihr geboten habt und in welchen Nachrichten stand „oh mein Gott, sie ist perfekt“. Das ist mein Briefing.",
+fy2:"Dadurch trifft jeder neue Charakter ein Stück genauer als der letzte — die Paletten, zu denen ihr greift, die Archetypen, zu denen ihr zurückkommt, die kleinen Details, die euch auffallen und die ihr mir schreibt.",
+fy3:"Ich weiß, so arbeiten die wenigsten. Aber ihr seid der Grund, warum das jetzt mein Beruf ist, und ich mache lieber das, was ihr wirklich wolltet, als das, was ich angenommen habe.",
+fyHeart:"Ich hab euch alle sehr lieb und will einfach weiter mehr für euch machen.",
+revLabel:"Was Käufer sagen",
+procLabel:"So arbeite ich", procTitle:"Von „ich habe eine Idee“ zu „sie gehört mir“",
+procLede:"Jedes Mal dieselben fünf Schritte, damit du immer weißt, wo dein Charakter gerade steht und was als Nächstes kommt.",
+s1t:"Du erzählst mir die Stimmung", s1d:"Referenzen, eine Stimmung, eine halbe Idee, drei Wörter und eine Farbe — alles funktioniert. Es gibt keine falsche Art, es mir zu erklären, und den Rest frage ich nach.",
+s2t:"Ich baue das Konzept", s2d:"Silhouette, Palette und die Details, durch die man eine Person liest und kein Kostüm. Hier passiert der größte Teil des Denkens.",
+s3t:"Du siehst zuerst die Skizze", s3d:"Es wird nichts gerendert, bevor du sie gesehen hast. Änderungen sind in dieser Phase kostenlos — ich zeichne lieber eine Skizze neu, als dir jemanden zu geben, der es nicht ist.",
+s4t:"Linie und Rendering", s4d:"Saubere Linien, Licht und Glanz. Das ist der langsame Teil — und der, den ich am liebsten mag.",
+s5t:"Er gehört dir", s5d:"Dateien in voller Auflösung, ohne Wasserzeichen, volle Eigentumsrechte. Benenne ihn um, schreib seine Geschichte neu und zeichne ihn, so lange du willst.",
+priceLabel:"Preise", priceTitle:"Charakter-Auftragsarbeiten",
+priceLede:"Das sind Startpreise, keine Endsummen — Komplexität und Detailgrad verschieben sie. Jeder Auftrag ist etwas anders, deshalb legen wir den genauen Preis gemeinsam fest, bevor es losgeht.",
+sketch:"Skizze", lineart:"Lineart", flat:"Flache Farben", render:"Volles Rendering",
+sketchN:"Sauberer Bleistift, ohne Farbe.", lineartN:"Fertige Linien, bereit zum Kolorieren.", flatN:"Flächige Farbe, leichte Schatten.", renderN:"Licht, Textur, volle Ausarbeitung.",
+bust:"Büste", half:"Halbkörper", full:"Ganzkörper",
+addonsH:"Zusatzoptionen", commH:"Kommerzielle Nutzung",
+commP:"Vom Preis der Arbeit. Deckt Merchandise, Werbung, Branding, monetarisierte Inhalte und andere geschäftliche Zwecke ab.",
+aoOutfit:"Alternatives Outfit", aoChibi:"Chibi-Version", aoBeast:"Geist- / Bestienform", aoChar:"Zusätzlicher Charakter",
+aoExpr:"2 zusätzliche Ausdrücke", aoBack:"Rückansicht", aoPose:"Zusätzliche Pose / Version",
+aoPov:"Komplexe Perspektive / Verkürzung", aoBg:"Ausgearbeiteter Hintergrund", aoNsfw:"NSFW-Version",
+priceFine:"Die Preise sind Richtwerte und können je nach Komplexität und Detailmenge variieren. Jeder Auftrag ist einzigartig, der Endpreis wird daher individuell besprochen.",
+priceCta:"Eigene Idee? Schreib mir", priceCtaNote:"Ich antworte selbst, meist innerhalb eines Tages.",
+faqLabel:"Häufige Fragen", faqTitle:"Was mich am häufigsten gefragt wird",
+q1:"Was bekomme ich genau?", a1:"Das PNG in voller Auflösung ohne Wasserzeichen, das komplette Charakterdesign und volle Eigentumsrechte für den privaten Gebrauch. Sobald er dir gehört, kannst du ihn umbenennen, seine Geschichte neu schreiben und ihn zeichnen, so viel du willst.",
+q2:"Kann ich das Design nach dem Kauf ändern?", a2:"Ja, aber Änderungen, nachdem die Arbeit fertig und geliefert ist, sind eine kostenpflichtige Zusatzoption und nicht gratis. Was oben gelistet ist (neues Outfit, Bestienform, zusätzliche Pose), hat dort seinen Preis, und für Kleineres nenne ich dir vorher einen. Die einzige Phase, in der Änderungen nichts kosten, ist die Skizze — genau deshalb zeige ich sie dir immer vor dem Rendern.",
+q3:"Wie bezahle ich?", a3:"Am einfachsten ist PayPal: Ich schicke dir meine Adresse, du zahlst, und die Dateien gehen direkt an deine E-Mail. Ich nehme außerdem Krypto auf eine Bybit- oder Binance-Wallet sowie Western Union. Wenn nichts davon für dich passt, habe ich einen Patreon, dort fallen aber rund 10% Gebühr an, und die zahlt die Käuferseite — es wird dich also mehr kosten als die anderen Wege, das solltest du vorher wissen. Alles wird in US-Dollar abgerechnet, und bei kleineren Arbeiten mache ich keine Reservierungen oder Teilzahlungen.",
+q4:"Wie lange dauert es?", a4:"Eine Skizze dauert meist ein paar Tage. Ein volles Rendering ein bis zwei Wochen, je nach Warteschlange. Ich nenne dir immer den realistischen Termin vor der Zahlung, nicht den optimistischen.",
+q5:"Darf ich den Charakter kommerziell nutzen?", a5:"Ja — kommerzielle Rechte kosten +50% des Werkpreises. Sie decken Merch, Werbung, Branding und monetarisierte Inhalte ab. Ohne sie gehört dir der Charakter für den privaten Gebrauch.",
+q6:"Darf ich ein Adoptable weiterverkaufen?", a6:"Ja, aber bitte nicht über dem Preis, den du bezahlt hast, und nenne mich als ursprüngliche Designerin. Das ist die übliche Etikette in der Community und hält sie fair.",
+contactLabel:"Kontakt", contactTitle:"Sag gerne Hallo",
+contactLede:"Ich beantworte alles selbst, meist innerhalb eines Tages. Wenn du noch nicht genau weißt, was du willst, ist das völlig in Ordnung — schreib trotzdem, wir finden es gemeinsam heraus.",
+mailL:"E-Mail · der schnellste Weg", copy:"Adresse kopieren", copied:"Kopiert",
+payNote:"PayPal, Krypto (Bybit oder Binance), Western Union oder Patreon — alles in US-Dollar. Die Dateien kommen in voller Auflösung und ohne Wasserzeichen per E-Mail.",
+legal0:"Alle Rechte vorbehalten.",
+legal1:"Jedes Charakterdesign, jede Illustration und jede Arbeit auf dieser Seite ist mein eigenes Originalwerk und mein geistiges Eigentum, geschützt durch das Urheberrecht. Kopieren, erneutes Veröffentlichen, Bearbeiten, Weiterverkaufen oder die Verwendung zum Training von KI-Modellen — ganz oder teilweise, mit oder ohne Änderungen — ist ohne meine schriftliche Zustimmung nicht gestattet.",
+legal2:"Unbefugte Nutzung verletzt meine Rechte, und ich gehe dagegen vor — unter anderem mit Löschanträgen bei Hostern und Plattformen und, wo es angemessen ist, mit weiteren rechtlichen Schritten.",
+legal3:"Der Kauf eines Charakters oder einer Auftragsarbeit gibt dir die auf dieser Seite beschriebenen Nutzungsrechte. Er überträgt nicht das Urheberrecht am Werk selbst.",
+noteA:"hi, das bin ich",
+noteB:"jeder Charakter fängt hier an",
+flipCue:"tipp",
+flipAria:"Karte umdrehen",
+cardQ:"Willst du einen eigenen Charakter?",
+cardSheet:"Komplettes Blatt ansehen",
+chibiHi:"hallo!",
+chibiAria:"nyxika hallo sagen",
+vampire:"Vampirin",
+witch:"Hexe",
+bunnyMaid:"Hasen-Maid",
+seeMore:"Mehr ansehen",
+seeMoreSub:"Alle Charaktere, Hintergründe und Half-Body-Arbeiten",
+pieces:"Arbeiten",
+backHome:"Zurück zur Seite",
+galLabel:"Vollständiges Portfolio",
+galTitle:"Alles, was ich gezeichnet habe",
+galLede:"Zuerst die Charaktere, dann die Hintergründe, die ich für sie male, danach Half-Body-Arbeiten. Klicke auf eine Arbeit, um sie in voller Größe zu sehen.",
+jumpChars:"Charaktere",
+jumpBgs:"Hintergründe",
+jumpHalf:"Half Body",
+galCharsLabel:"Charaktere",
+galCharsTitle:"Eigene Charaktere und Adoptables",
+galCharsNote:"Alle sind mein eigener Entwurf. Die bereits adoptierten gehören jetzt ihren Besitzern.",
+galBgLabel:"Hintergründe",
+galBgTitle:"Hintergründe, die ich für Charaktere male",
+galBgNote:"Ein Charakter wirkt anders, sobald er einen Ort hat, an dem er steht. Ich baue erst den Raum und setze dann das Licht — das Studierzimmer unten ist dreimal gemalt: Nacht, Dämmerung und Tag, damit derselbe Charakter zu jeder Stunde darin leben kann.",
+galHalfLabel:"Half Body",
+galHalfTitle:"Büsten und Half-Body-Arbeiten",
+galHalfNote:"Näher dran, wo Gesicht und Stoff die Arbeit machen. Das sind Auftragsarbeiten nach den Charakteren meiner Kundschaft.",
+galCtaTitle:"Willst du so etwas für deinen eigenen Charakter?",
+galCtaPrice:"Preise ansehen",
+bgStudy:"Studierzimmer der Hexe",
+bgShipN:"Schiffsbrücke",
+bgNight:"Nacht",
+bgDusk:"Dämmerung",
+bgDay:"Tag",
+bgShip:"Sci-Fi-Interieur",
+hbSpiderN:"Spinnengeist",
+hbCorridorN:"Nachtkorridor",
+bustTag:"Büste",
+halfTag:"Half Body",
+navAll:"Alle Arbeiten",
+writeMe:"Schreib mir"
+};
+
+/* ---------------- render ---------------- */
+var $ = function(s,r){return (r||document).querySelector(s)};
+var $$ = function(s,r){return Array.prototype.slice.call((r||document).querySelectorAll(s))};
+var esc = function(s){var d=document.createElement("div"); d.textContent=s; return d.innerHTML};
+var lang = "en";
+
+function build(t){
+  /* three featured cards, each flipping to show where to get one */
+  var feat = DATA.works.characters.filter(function(c){ return c.featured }).slice(0,3);
+  if (!feat.length) feat = DATA.works.characters.slice(0,3);
+  $("#track").innerHTML = feat.map(function(c){
+    return '<div class="card" data-id="'+c.id+'" data-name="'+esc(c.name)+'">'
+      + '<div class="card-inner">'
+      +   '<button class="card-face card-front" aria-expanded="false" aria-label="'+esc(t.flipAria)+'">'
+      +     '<span class="card-img"><img src="'+esc(c.card)+'" alt="'+esc(c.name)+'" width="800" height="1066" loading="lazy"></span>'
+      +     '<span class="flip-cue">'+esc(t.flipCue)+'</span>'
+      +   '</button>'
+      +   '<div class="card-face card-back">'
+      +     '<p>'+esc(t.cardQ)+'</p>'
+      +     '<a href="https://www.deviantart.com/nyxikaaa" target="_blank" rel="noopener">DeviantArt</a>'
+      +     '<a href="https://ig.me/m/_nyxika_" target="_blank" rel="noopener">'+esc(t.writeMe)+'</a>'
+      +     '<button class="mini js-sheet">'+esc(t.cardSheet)+'</button>'
+      +   '</div>'
+      + '</div>'
+      + '<div class="card-meta"><span class="card-name">'+esc(c.name)+'</span>'
+      + '<span class="card-tag">'+esc(lab(c,"tag"))+'</span></div></div>';
+  }).join("")
+  + '<a class="card-more" href="#gallery"><span class="more-inner">'
+  +   '<span class="more-ring"><svg><use href="#i-arrowr"/></svg></span>'
+  +   '<span class="more-t">'+esc(t.seeMore)+'</span>'
+  +   '<span class="more-s">'+esc(t.seeMoreSub)+'</span>'
+  +   '<span class="more-count">'+allWorks().length+' '+esc(t.pieces)+'</span>'
+  + '</span></a>';
+
+  /* gallery grids */
+  function tile(it){
+    var nm = lab(it,"name");
+    return '<button class="tile" data-full="'+it.id+'" data-name="'+esc(nm)+'">'
+      + '<span class="tile-img"><img src="'+esc(it.card)+'" alt="'+esc(nm)+'" loading="lazy"></span>'
+      + '<span class="tile-meta"><span class="tile-name">'+esc(nm)+'</span>'
+      + '<span class="tile-tag">'+esc(lab(it,"tag"))+'</span></span></button>';
+  }
+  if ($("#gridChars")) {
+    $("#gridChars").innerHTML = DATA.works.characters.map(tile).join("");
+    $("#gridBgs").innerHTML   = DATA.works.backgrounds.map(tile).join("");
+    $("#gridHalf").innerHTML  = DATA.works.halfbody.map(tile).join("");
+  }
+
+  /* reviews */
+  var star = '<svg><use href="#i-star"/></svg>';
+  var revList = Array.isArray(DATA.reviews) ? DATA.reviews : (DATA.reviews.items || []);
+  $("#revTrack").innerHTML = revList.map(function(r){
+    return '<figure class="rev"><div class="stars" aria-label="5 out of 5">'+star+star+star+star+star+'</div>'
+      + '<blockquote class="rev-q">“'+esc(r.quote || "")+'”</blockquote>'
+      + '<figcaption class="rev-w"><span class="rev-av">'+esc((r.name || "?").charAt(0).toUpperCase())+'</span>'
+      + '<span class="rev-n">'+esc(r.name || "")+'</span></figcaption></figure>';
+  }).join("");
+
+  /* steps */
+  var st = "";
+  for (var i=1;i<=5;i++){
+    st += '<div class="step rv"><div class="step-n">0'+i+'</div><div>'
+       + '<h3>'+esc(t["s"+i+"t"])+'</h3><p>'+esc(t["s"+i+"d"])+'</p></div></div>';
+  }
+  $("#steps").innerHTML = st;
+
+  /* tiers */
+  var sizes = ["bust","half","full"];
+  $("#tiers").innerHTML = DATA.pricing.tiers.map(function(tr){
+    var prices = [tr.bust, tr.half, tr.full];
+    var rows = prices.map(function(price,i){
+      return '<div class="row"><span class="k">'+esc(t[sizes[i]])+'</span><span class="v">$'+price+'</span></div>';
+    }).join("");
+    return '<div class="tier'+(tr.featured?" feat":"")+'"><div class="tier-h">'+esc(t[tr.key])+'</div>'
+      + '<div class="tier-note">'+esc(t[tr.key+"N"])+'</div><div class="rows">'+rows+'</div></div>';
+  }).join("");
+
+  /* addons */
+  $("#addons").innerHTML = DATA.pricing.addons.map(function(a){
+    return '<div class="addon"><span class="k">'+esc(lab(a,"label"))+'</span>'
+      + '<span class="v">'+esc(a.price)+'</span></div>';
+  }).join("");
+
+  var cb = $("#commBig"); if (cb) cb.textContent = DATA.pricing.commercial;
+
+  /* faq */
+  var f = "";
+  for (var j=1;j<=6;j++){
+    f += '<details><summary>'+esc(t["q"+j])+'</summary><p>'+esc(t["a"+j])+'</p></details>';
+  }
+  $("#faqList").innerHTML = f;
+}
+
+function apply(code){
+  var t = T[code] || T.en;
+  lang = code;
+  document.documentElement.lang = code;
+  $$("[data-i-aria]").forEach(function(el){
+    var v = t[el.getAttribute("data-i-aria")];
+    if (v) el.setAttribute("aria-label", v);
+  });
+  $$("[data-i]").forEach(function(el){
+    var v = t[el.getAttribute("data-i")];
+    if (v == null) return;
+    if (v.indexOf("<") > -1) el.innerHTML = v; else el.textContent = v;
+  });
+  build(t);
+  $$("#langList button").forEach(function(b){ b.classList.toggle("on", b.dataset.l === code) });
+  var ct = $("#copyTxt"); if (ct) ct.textContent = t.copy;
+  arm();
+}
+
+/* ---------------- reveal ---------------- */
+var io = null;
+function arm(){
+  if (io) io.disconnect();
+  var vh = window.innerHeight || 800;
+  var targets = $$(".rv");
+  targets.forEach(function(el){
+    el.classList.remove("in");
+    if (el.getBoundingClientRect().top > vh - 40) el.setAttribute("data-armed","");
+    else el.removeAttribute("data-armed");
+  });
+  io = new IntersectionObserver(function(entries){
+    entries.forEach(function(e){
+      if (e.isIntersecting){ e.target.classList.add("in"); io.unobserve(e.target) }
+    });
+  }, {rootMargin:"0px 0px -8% 0px", threshold:0.06});
+  targets.forEach(function(el){ if (el.hasAttribute("data-armed")) io.observe(el) });
+}
+
+/* ---------------- init ---------------- */
+var saved = null;
+try { saved = localStorage.getItem("nyxika-lang") } catch(e){}
+if (!saved){
+  var n = (navigator.language || "en").slice(0,2).toLowerCase();
+  if (n === "ru") n = "uk";
+  saved = T[n] ? n : "en";
+}
+function start(){ apply(T[saved] ? saved : "en"); route(); }
+
+/* Pull content from data/*.json when the site is served over http.
+   Opened straight from disk the fetch fails and the built-in copy above is used. */
+(function boot(){
+  var files = [["works","data/works.json"],["pricing","data/pricing.json"],["reviews","data/reviews.json"]];
+  Promise.all(files.map(function(f){
+    return fetch(f[1], {cache:"no-cache"})
+      .then(function(r){ return r.ok ? r.json() : null })
+      .catch(function(){ return null });
+  })).then(function(res){
+    res.forEach(function(v,i){ if (v) DATA[files[i][0]] = v });
+  })["catch"](function(){}).then(start, start);
+})();
+
+$("#langList").addEventListener("click", function(e){
+  var b = e.target.closest("button[data-l]"); if (!b) return;
+  apply(b.dataset.l);
+  try { localStorage.setItem("nyxika-lang", b.dataset.l) } catch(err){}
+});
+
+/* router - #gallery swaps the whole page, back returns to the site */
+var homePage = $('[data-page="home"]'), galPage = $("#galleryPage"), onGal = null;
+function route(){
+  var g = location.hash === "#gallery";
+  if (g === onGal) return;
+  onGal = g;
+  galPage.hidden = !g; homePage.hidden = g;
+  $$("#nav a").forEach(function(a){
+    if (a.getAttribute("href") === "#gallery") a.classList.toggle("on", g);
+    else if (g) a.classList.remove("on");
+  });
+  if (g) { window.scrollTo(0,0); }
+  else {
+    // coming back from the gallery lands on the portfolio block they left from
+    var id = location.hash.slice(1) || "works";
+    var el = document.getElementById(id);
+    if (el) el.scrollIntoView(); else window.scrollTo(0,0);
+  }
+  arm();
+}
+window.addEventListener("hashchange", route);
+$$("[data-back]").forEach(function(btn){
+  btn.addEventListener("click", function(){
+    if (history.length > 1 && onGal) history.back();
+    else location.hash = "#works";
+  });
+});
+$$("[data-back-to]").forEach(function(a){
+  a.addEventListener("click", function(e){
+    e.preventDefault(); location.hash = "#" + a.getAttribute("data-back-to");
+  });
+});
+
+/* chibi: tap her and the stars light up */
+$$("[data-chibi]").forEach(function(btn){
+  var stage = btn.closest(".chibi-stage");
+  btn.addEventListener("click", function(){
+    stage.classList.remove("sparkling");
+    void stage.offsetWidth;               // restart the animation on a repeat tap
+    stage.classList.add("sparkling");
+    clearTimeout(stage.__t);
+    stage.__t = setTimeout(function(){ stage.classList.remove("sparkling") }, 1500);
+  });
+});
+
+/* drawer */
+var rail = $("#rail"), scrim = $("#scrim"), burger = $("#burger");
+function drawer(open){
+  rail.classList.toggle("open", open);
+  scrim.classList.toggle("on", open);
+  burger.setAttribute("aria-expanded", open ? "true" : "false");
+}
+burger.addEventListener("click", function(){ drawer(!rail.classList.contains("open")) });
+scrim.addEventListener("click", function(){ drawer(false) });
+$("#nav").addEventListener("click", function(e){ if (e.target.closest("a")) drawer(false) });
+
+/* active section */
+var links = $$("#nav a");
+var secs = links.map(function(a){ return document.getElementById(a.getAttribute("href").slice(1)) }).filter(Boolean);
+var navIo = new IntersectionObserver(function(entries){
+  entries.forEach(function(e){
+    if (!e.isIntersecting) return;
+    links.forEach(function(a){ a.classList.toggle("on", a.getAttribute("href") === "#"+e.target.id) });
+  });
+}, {rootMargin:"-45% 0px -50% 0px"});
+secs.forEach(function(s){ navIo.observe(s) });
+
+/* gallery arrows */
+var track = $("#track");
+function step(dir){
+  var card = track.querySelector(".card");
+  var w = card ? card.getBoundingClientRect().width + 18 : 260;
+  track.scrollBy({left: dir * w * 2, behavior:"smooth"});
+}
+$("#prev").addEventListener("click", function(){ step(-1) });
+$("#next").addEventListener("click", function(){ step(1) });
+
+/* lightbox */
+var lb = $("#lb"), lbImg = $("#lbImg"), lbCap = $("#lbCap");
+track.addEventListener("click", function(e){
+  var card = e.target.closest(".card"); if (!card) return;
+  if (e.target.closest(".js-sheet")) {            // back face: open the full sheet
+    openLb(card.dataset.id, card.dataset.name);
+    return;
+  }
+  var front = e.target.closest(".card-front");
+  if (front) {                                    // front face: flip it over
+    var was = card.classList.contains("flipped");
+    $$(".card.flipped").forEach(function(o){
+      o.classList.remove("flipped");
+      var f = o.querySelector(".card-front"); if (f) f.setAttribute("aria-expanded","false");
+    });
+    card.classList.toggle("flipped", !was);
+    front.setAttribute("aria-expanded", String(!was));
+  }
+});
+function openLb(id, name){
+  lbImg.src = FULL_SRC(id);
+  lbImg.alt = name;
+  lbCap.textContent = name + " · nyxika";
+  lb.classList.add("on");
+  document.body.style.overflow = "hidden";
+}
+/* gallery tiles open the same lightbox */
+document.addEventListener("click", function(e){
+  var tl = e.target.closest(".tile"); if (!tl) return;
+  openLb(tl.dataset.full, tl.dataset.name);
+});
+function closeLb(){ lb.classList.remove("on"); document.body.style.overflow = ""; lbImg.removeAttribute("src") }
+$("#lbClose").addEventListener("click", closeLb);
+lb.addEventListener("click", function(e){ if (e.target === lb) closeLb() });
+document.addEventListener("keydown", function(e){
+  if (e.key === "Escape"){
+    if (lb.classList.contains("on")) closeLb();
+    $$(".card.flipped").forEach(function(o){ o.classList.remove("flipped") });
+    drawer(false);
+  }
+});
+
+/* copy email */
+$("#copyBtn").addEventListener("click", function(){
+  var addr = $("#mailV").textContent.trim();
+  var done = function(){
+    $("#copyTxt").textContent = (T[lang] || T.en).copied;
+    setTimeout(function(){ $("#copyTxt").textContent = (T[lang] || T.en).copy }, 1900);
+  };
+  try {
+    navigator.clipboard.writeText(addr).then(done).catch(function(){ select() });
+  } catch(e){ select() }
+  function select(){
+    var r = document.createRange(); r.selectNodeContents($("#mailV"));
+    var s = window.getSelection(); s.removeAllRanges(); s.addRange(r); done();
+  }
+});
+
+window.addEventListener("resize", function(){
+  clearTimeout(window.__rt); window.__rt = setTimeout(arm, 240);
+});
+})();
+</script>
