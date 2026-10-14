@@ -147,6 +147,15 @@
       "tag_uk": "Half body",
       "card": "img/card-hb-corridor.jpg",
       "full": "img/full-hb-corridor.jpg"
+    },
+    {
+      "id": "ychpink",
+      "name": "Ych example",
+      "name_uk": "Твій персонаж тут приклад",
+      "tag": "Witch on the Pumpkin",
+      "tag_uk": "Відьма на гарбузі",
+      "card": "/img/B195C5FD-D88F-42BE-AFFD-E7FD34DB89DC.JPG",
+      "full": "/img/IMG_2498.JPG"
     }
   ]
 }
