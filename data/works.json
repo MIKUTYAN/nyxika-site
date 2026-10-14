@@ -28,10 +28,10 @@
       "featured": true
     },
     {
-      "id": "greenwitch",
-      "name": "Wisp",
-      "tag": "Witch",
-      "tag_uk": "Відьма",
+      "id": "greendoberman",
+      "name": "Doberman Necromancer",
+      "tag": "Doberman Necromancer",
+      "tag_uk": "Доберман-некромант",
       "card": "img/card-greenwitch.jpg",
       "full": "img/full-greenwitch.jpg",
       "featured": false
@@ -80,6 +80,15 @@
       "card": "img/card-biker.jpg",
       "full": "img/full-biker.jpg",
       "featured": false
+    },
+    {
+      "id": "goatdemonhunter",
+      "name": "Goat Demon Hunter",
+      "tag": "Goat Demon Hunter",
+      "tag_uk": "Мисливець коза-демон",
+      "card": "/img/IMG_2582.JPG",
+      "full": "/img/IMG_2585.JPG",
+      "featured": true
     }
   ],
   "backgrounds": [
