@@ -2,31 +2,31 @@
   "tiers": [
     {
       "key": "sketch",
-      "featured": false,
       "bust": 20,
       "half": 25,
-      "full": 35
+      "full": 35,
+      "featured": false
     },
     {
       "key": "lineart",
-      "featured": false,
       "bust": 30,
       "half": 40,
-      "full": 55
+      "full": 55,
+      "featured": false
     },
     {
       "key": "flat",
-      "featured": false,
       "bust": 40,
       "half": 50,
-      "full": 65
+      "full": 65,
+      "featured": false
     },
     {
       "key": "render",
-      "featured": true,
       "bust": 50,
       "half": 65,
-      "full": 85
+      "full": 85,
+      "featured": true
     }
   ],
   "addons": [
@@ -41,9 +41,9 @@
       "price": "+$20"
     },
     {
-      "label": "Spirit / beast form",
-      "label_uk": "Духовна / звіряча форма",
-      "price": "+$40"
+      "label": "Pet",
+      "label_uk": "Улюбленець",
+      "price": "+$30"
     },
     {
       "label": "Additional character",
